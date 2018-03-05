@@ -1,3 +1,20 @@
+# VSCode
+.vscode/
+jsconfig.json
+
+# IntelliJ/Webstorm
+.idea
+
+# OS X
+.DS_Store
+
+# Exponent
+.exponent
+.expo
+
+# Jest
+coverage
+
 # Logs
 logs
 *.log

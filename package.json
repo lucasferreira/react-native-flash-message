@@ -1,0 +1,25 @@
+{
+  "name": "react-native-flash-message",
+  "version": "0.1.0",
+  "description": "React Native flashbar and top notification alert utility",
+  "main": "src/index.js",
+  "repository": "https://github.com/lucasferreira/react-native-flash-message.git",
+  "author": "Lucas Ferreira <contato@lucasferreira.com>",
+  "license": "MIT",
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "prop-types": "^15.0 || ^16.0"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.1"
+  },
+  "devDependencies": {
+    "prettier": "^1.11.1",
+    "react": "^16.2.0",
+    "react-native": "^0.54.0"
+  }
+}
