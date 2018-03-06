@@ -7,10 +7,7 @@ import {
   View,
 } from "react-native";
 
-import FlashMessage, {
-  showMessage,
-  hideMessage,
-} from "react-native-flash-message";
+import FlashMessage, { showMessage, hideMessage } from "../../src";
 
 const DemoButton = ({ style, label, onPress }) => (
   <TouchableOpacity

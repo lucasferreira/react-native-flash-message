@@ -1,5 +1,9 @@
 {
   "expo": {
-    "sdkVersion": "25.0.0"
+    "sdkVersion": "25.0.0",
+    "packagerOpts": {
+      "projectRoots": "",
+      "config": "rn-cli.config.js"
+    }
   }
 }

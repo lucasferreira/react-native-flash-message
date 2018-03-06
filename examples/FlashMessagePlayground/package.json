@@ -21,7 +21,6 @@
   "dependencies": {
     "expo": "^25.0.0",
     "react": "16.2.0",
-    "react-native": "0.52.0",
-    "react-native-flash-message": "https://github.com/lucasferreira/react-native-flash-message"
+    "react-native": "0.52.0"
   }
 }
