@@ -4,6 +4,20 @@
   "description": "React Native flashbar and top notification alert utility",
   "main": "src/index.js",
   "repository": "https://github.com/lucasferreira/react-native-flash-message.git",
+  "keywords": [
+    "react",
+    "react-native",
+    "react-component",
+    "native",
+    "component",
+    "flash",
+    "flashbar",
+    "flashmessage",
+    "message",
+    "alert",
+    "notification",
+    "utility"
+  ],
   "author": "Lucas Ferreira <contato@lucasferreira.com>",
   "license": "MIT",
   "files": [

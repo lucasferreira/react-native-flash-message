@@ -12,8 +12,6 @@ import FlashMessage, {
   hideMessage,
 } from "react-native-flash-message";
 
-const noop = () => {};
-
 const DemoButton = ({ style, label, onPress }) => (
   <TouchableOpacity
     activeOpacity={0.75}
