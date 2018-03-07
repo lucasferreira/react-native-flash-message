@@ -1,8 +1,9 @@
 import React from "react";
 import {
   StyleSheet,
-  ScrollView,
+  StatusBar,
   TouchableOpacity,
+  ScrollView,
   Text,
   View,
 } from "react-native";
@@ -65,10 +66,16 @@ export default class App extends React.Component {
             />
           </View>
         </ScrollView>
-        <FlashMessage ref="masterMessage" position="top" animated={true} />
+        <FlashMessage
+          onShow={() => StatusBar.setBarStyle("light-content")}
+          onHide={() => StatusBar.setBarStyle("default")}
+          position="top"
+          animated={true}
+        />
         <FlashMessage
           ref="masterMessageBottom"
-          position="bottom"
+          position="center"
+          autoHide={false}
           animated={true}
         />
       </View>

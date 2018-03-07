@@ -2,11 +2,11 @@
 
 import React, { Component } from "react";
 import {
-  View,
-  Text,
-  Animated,
-  TouchableWithoutFeedback,
   StyleSheet,
+  TouchableWithoutFeedback,
+  Animated,
+  Text,
+  View,
 } from "react-native";
 
 import PropTypes from "prop-types";
@@ -15,7 +15,7 @@ import FlashMessageManager from "./FlashMessageManager";
 import FlashMessageWrapper, { styleWithInset } from "./FlashMessageWrapper";
 
 /**
- * MessageComponent `minHeight` proporty used mainly in vertical transitions
+ * MessageComponent `minHeight` property used mainly in vertical transitions
  */
 const OFFSET_HEIGHT = 48;
 
@@ -72,8 +72,9 @@ export function positionStyle(style, position) {
  * Global function to handle show messages that can be called anywhere in your app
  * Pass some `message` object as first attribute to display flash messages in your app
  *
+ * ```
  *  showMessage({ message: "Contact sent", description "Your message was sent with success", type: "success" })
- *
+ * ```
  */
 export function showMessage(...args) {
   const ref = FlashMessageManager.getDefault();
@@ -85,8 +86,9 @@ export function showMessage(...args) {
 /**
  * Global function to programmatically hide messages that can be called anywhere in your app
  *
+ * ```
  *  hideMessage()
- *
+ * ```
  */
 export function hideMessage(...args) {
   const ref = FlashMessageManager.getDefault();
@@ -161,6 +163,7 @@ export const DefaultFlash = ({
                   !!FlashMessage.ColorTheme[message.type] && {
                     backgroundColor: FlashMessage.ColorTheme[message.type],
                   },
+              position === "center" && styles.defaultFlashCenter,
               style,
             ],
             wrapperInset
@@ -203,11 +206,12 @@ DefaultFlash.propTypes = {
  * You can instace and use this component once in your main app screen
  * To global use, please add your <FlasshMessage /> as a last component in your root main screen
  *
- * <View style={{ flex: 1 }}>
- *  <YourMainApp />
- *  <FlasshMessage />   <--- here as last component
- * <View>
- *
+ * ```
+ *   <View style={{ flex: 1 }}>
+ *     <YourMainApp />
+ *     <FlasshMessage />   <--- here as last component
+ *   <View>
+ * ```
  */
 export default class FlashMessage extends Component {
   static defaultProps = {
@@ -256,6 +260,8 @@ export default class FlashMessage extends Component {
   static propTypes = {
     canRegisterAsDefault: PropTypes.bool,
     hideOnPress: PropTypes.bool,
+    onShow: PropTypes.func,
+    onHide: PropTypes.func,
     onPress: PropTypes.func,
     animated: PropTypes.bool,
     animationDuration: PropTypes.number,
@@ -341,25 +347,34 @@ export default class FlashMessage extends Component {
    * Non-public method
    */
   toggleVisibility(visible = true, done) {
-    const animated = this.prop(this.state.message, "animated");
+    const { message } = this.state;
+
+    const animated = this.prop(message, "animated");
     if (!animated) {
       return;
     }
 
+    const position = this.prop(message, "position");
     const animationDuration = this.prop(
       this.state.message,
       "animationDuration"
     );
-    const duration = this.prop(this.state.message, "duration");
-    const autoHide = this.prop(this.state.message, "autoHide");
+    const duration = this.prop(message, "duration");
+    const autoHide = this.prop(message, "autoHide");
 
     if (this._hideTimeout) {
       clearTimeout(this._hideTimeout);
     }
 
     if (visible) {
+      const onShow = this.prop(message, "onShow") || noop;
+
       this.setState({ isHidding: false });
       this.state.visibleValue.setValue(0);
+
+      if (!!onShow && typeof onShow === "function") {
+        onShow(this);
+      }
 
       Animated.timing(this.state.visibleValue, {
         toValue: 1,
@@ -378,6 +393,8 @@ export default class FlashMessage extends Component {
         }
       });
     } else {
+      const onHide = this.prop(message, "onHide") || noop;
+
       this.setState({ isHidding: true });
 
       Animated.timing(this.state.visibleValue, {
@@ -386,6 +403,10 @@ export default class FlashMessage extends Component {
         useNativeDriver: true,
       }).start(() => {
         this.setState({ message: null, isHidding: false });
+
+        if (!!onHide && typeof onHide === "function") {
+          onHide(this);
+        }
 
         if (!!done && typeof done === "function") {
           done();
@@ -397,8 +418,9 @@ export default class FlashMessage extends Component {
    * Instace ref function to handle show messages
    * Pass some `message` object as first attribute to display a flash message
    *
-   *  this.refs.YOUR_REF.showMessage({ message: "Contact sent", description "Your message was sent with success", type: "success" })
-   *
+   * ```
+   * this.refs.YOUR_REF.showMessage({ message: "Contact sent", description "Your message was sent with success", type: "success" })
+   * ```
    */
   showMessage(message, description = null, type = "default") {
     if (!!message) {
@@ -422,8 +444,9 @@ export default class FlashMessage extends Component {
   /**
    * Instace ref function to programmatically hide message
    *
-   *  this.refs.YOUR_REF.hideMessage()
-   *
+   * ```
+   * this.refs.YOUR_REF.hideMessage()
+   * ```
    */
   hideMessage() {
     const animated = this.isAnimated(this.state.message);
@@ -444,7 +467,12 @@ export default class FlashMessage extends Component {
     const animStyle = animated ? transitionConfig(visibleValue, position) : {};
 
     return (
-      <Animated.View style={[positionStyle(styles.root, position), animStyle]}>
+      <Animated.View
+        style={[
+          positionStyle(styles.root, position),
+          position === "center" && !!message && styles.rootCenterEnabled,
+          animStyle,
+        ]}>
         {!!message && (
           <TouchableWithoutFeedback onPress={this.pressMessage}>
             <MessageComponent
@@ -476,17 +504,27 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   rootCenter: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  rootCenterEnabled: {
     top: 0,
+    left: 0,
+    right: 0,
     bottom: 0,
+    width: "100%",
+    height: "100%",
   },
   defaultFlash: {
     paddingVertical: 15,
     paddingHorizontal: 20,
     backgroundColor: "#696969",
     minHeight: OFFSET_HEIGHT,
+  },
+  defaultFlashCenter: {
+    margin: 44,
+    borderRadius: 8,
+    overflow: "hidden",
   },
   flashText: {
     fontSize: 14,

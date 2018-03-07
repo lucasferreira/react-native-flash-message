@@ -181,9 +181,16 @@ export default class FlashMessageWrapper extends Component {
       isIPad: isIPad,
       statusBarHeight: _statusBarHeight,
       insetTop: position === "top" ? _statusBarHeight : 0,
-      insetLeft: 0,
-      insetRight: 0,
-      insetBottom: 0,
+      insetLeft:
+        (position === "top" || position === "bottom") && isLandscape
+          ? isIPhoneX ? 21 : 0
+          : 0,
+      insetRight:
+        (position === "top" || position === "bottom") && isLandscape
+          ? isIPhoneX ? 21 : 0
+          : 0,
+      insetBottom:
+        isIPhoneX && position === "bottom" ? (isLandscape ? 24 : 34) : 0,
     };
 
     return children(wrapper);
