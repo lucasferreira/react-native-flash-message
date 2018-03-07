@@ -1,3 +1,5 @@
+"use strict";
+
 import FlashMessageManager from "./FlashMessageManager";
 import FlashMessageWrapper, { styleWithInset } from "./FlashMessageWrapper";
 import FlashMessage, {

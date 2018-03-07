@@ -1,17 +1,19 @@
+"use strict";
+
 import React, { Component } from "react";
 import { Dimensions, Platform, StyleSheet } from "react-native";
 
 import PropTypes from "prop-types";
 
-/*
-* DETECTION AND DIMENSIONS CODE FROM:
-* https://github.com/react-community/react-native-safe-area-view
-*/
+/**
+ * DETECTION AND DIMENSIONS CODE FROM:
+ * https://github.com/react-community/react-native-safe-area-view
+ */
 
-const X_WIDTH = 375;
-const X_HEIGHT = 812;
-const PAD_WIDTH = 768;
-const PAD_HEIGHT = 1024;
+const X_WIDTH = 375; // iPhone X
+const X_HEIGHT = 812; // iPhone X
+const PAD_WIDTH = 768; // iPad
+const PAD_HEIGHT = 1024; // iPad
 
 const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get("window");
 
@@ -86,6 +88,9 @@ const doubleFromPercentString = percent => {
   return dbl;
 };
 
+/**
+ * Helper function to "append" extra padding in MessageComponent style
+ */
 export function styleWithInset(style, wrapperInset) {
   const { width: viewWidth } = Dimensions.get("window");
 
@@ -125,8 +130,15 @@ export function styleWithInset(style, wrapperInset) {
   };
 }
 
+/**
+ * Utility component wrapper to handle orientation changes and extra padding controle for iOS (specially iPads and iPhone X)
+ */
 export default class FlashMessageWrapper extends Component {
   static defaultProps = {
+    /**
+     * Default FlashMessage position is "top"
+     * Other options like "bottom" and "center" uses other extra padding configurations
+     */
     position: "top",
   };
   static propTypes = {
@@ -160,6 +172,9 @@ export default class FlashMessageWrapper extends Component {
 
     const _statusBarHeight = statusBarHeight(isLandscape);
 
+    /**
+     * This wrapper will return data about extra inset padding, statusBarHeight and some device detection like iPhoneX and iPad
+     */
     const wrapper = {
       isLandscape,
       isIPhoneX: isIPhoneX,

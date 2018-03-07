@@ -21,8 +21,8 @@ const DemoButton = ({ style, label, onPress }) => (
 export default class App extends React.Component {
   showSimpleMessage() {
     const message = {
-      message: "Título",
-      description: "Olá mundo mudo\nQuebremo ou não?",
+      message: "Some message title",
+      description: "Lorem ipsum dolar sit amet",
       type: "success",
     };
 
@@ -30,7 +30,7 @@ export default class App extends React.Component {
   }
   showSecondMessageComponent() {
     const message = {
-      message: "Olá mundo mudo - Quebremo ou não?",
+      message: "Some simple message to show",
       type: "warning",
     };
 

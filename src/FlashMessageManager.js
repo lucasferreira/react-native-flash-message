@@ -1,3 +1,8 @@
+"use strict";
+
+/**
+ * Non-public global class to handle the "default" FlashMessage instance to global use
+ */
 class FlashMessageManager {
   _defaultFlashMessage = null;
   register(_ref) {

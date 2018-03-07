@@ -1,3 +1,5 @@
+"use strict";
+
 import React, { Component } from "react";
 import {
   View,
@@ -12,9 +14,34 @@ import PropTypes from "prop-types";
 import FlashMessageManager from "./FlashMessageManager";
 import FlashMessageWrapper, { styleWithInset } from "./FlashMessageWrapper";
 
+/**
+ * MessageComponent `minHeight` proporty used mainly in vertical transitions
+ */
 const OFFSET_HEIGHT = 48;
+
+/**
+ * `message` prop it's expected to be some "object"
+ * The `message` attribute is mandatory.
+ * If you pass some `description` attribute your flash message will be displayed in two lines (first `message` as a title and after `description` as simple text)
+ * The `type` attribute set the type and color of your flash message, default options are "success" (green), "warning" (orange), "danger" (red), "info" (blue) and "default" (gray)
+ * If you need to customize the bg color or text color for a single message you can use the `backgroundColor` and `color` attributes
+ */
+const MessagePropType = PropTypes.shape({
+  message: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  type: PropTypes.string,
+  backgroundColor: PropTypes.string,
+  color: PropTypes.string,
+}).isRequired;
+
+/**
+ * Non-operation func
+ */
 const noop = () => {};
 
+/**
+ * Simple random ID for internal FlashMessage component usage
+ */
 function srid() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -25,6 +52,9 @@ function srid() {
   return `${s4()}-${s4()}-${s4()}`;
 }
 
+/**
+ * Translates string positions like "top", "bottom" and "center" to style classes
+ */
 export function positionStyle(style, position) {
   if (typeof position === "string") {
     return [
@@ -38,6 +68,13 @@ export function positionStyle(style, position) {
   return [style, position];
 }
 
+/**
+ * Global function to handle show messages that can be called anywhere in your app
+ * Pass some `message` object as first attribute to display flash messages in your app
+ *
+ *  showMessage({ message: "Contact sent", description "Your message was sent with success", type: "success" })
+ *
+ */
 export function showMessage(...args) {
   const ref = FlashMessageManager.getDefault();
   if (!!ref) {
@@ -45,6 +82,12 @@ export function showMessage(...args) {
   }
 }
 
+/**
+ * Global function to programmatically hide messages that can be called anywhere in your app
+ *
+ *  hideMessage()
+ *
+ */
 export function hideMessage(...args) {
   const ref = FlashMessageManager.getDefault();
   if (!!ref) {
@@ -52,6 +95,10 @@ export function hideMessage(...args) {
   }
 }
 
+/**
+ * Default transtion config for FlashMessage component
+ * You can create your own transition config with interpolation, just remember to return some style object with transform options
+ */
 export function FlashMessageTransition(animValue, position = "top") {
   const opacity = animValue.interpolate({
     inputRange: [0, 1],
@@ -85,6 +132,11 @@ export function FlashMessageTransition(animValue, position = "top") {
   };
 }
 
+/**
+ * Default MessageComponent used in FlashMessage
+ * This component it's wrapped in `FlashMessageWrapper` to handle orientation change and extra inset padding in special devices
+ * For most of uses this component doesn't need to be change for custom versions, cause it's very customizable
+ */
 export const DefaultFlash = ({
   message,
   style,
@@ -142,16 +194,85 @@ export const DefaultFlash = ({
 };
 
 DefaultFlash.propTypes = {
-  message: PropTypes.shape({
-    message: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    type: PropTypes.string,
-    backgroundColor: PropTypes.string,
-    color: PropTypes.string,
-  }).isRequired,
+  message: MessagePropType,
 };
 
+/**
+ * Main component of this package
+ * The FlashMessage component it's a global utility to help you with easily and highly customizable flashbars, top notifications or alerts (with iPhone X "notch" support)
+ * You can instace and use this component once in your main app screen
+ * To global use, please add your <FlasshMessage /> as a last component in your root main screen
+ *
+ * <View style={{ flex: 1 }}>
+ *  <YourMainApp />
+ *  <FlasshMessage />   <--- here as last component
+ * <View>
+ *
+ */
 export default class FlashMessage extends Component {
+  static defaultProps = {
+    /**
+     * Use to handle if the instance can be registed as default/global instance
+     */
+    canRegisterAsDefault: true,
+    /**
+     * Controls if the flash message can be closed on press
+     */
+    hideOnPress: true,
+    /**
+     * `onPress` callback for flash message press
+     */
+    onPress: noop,
+    /**
+     * Controls if the flash message will be shown with animation or not
+     */
+    animated: true,
+    /**
+     * Animations duration/speed
+     */
+    animationDuration: 225,
+    /**
+     * Controls if the flash message can hide itself after some `duration` time
+     */
+    autoHide: true,
+    /**
+     * How many milliseconds the flash message will be shown if the `autoHide` it's true
+     */
+    duration: 1850,
+    /**
+     * The `position` prop set the position of a flash message
+     * Expected options: "top" (default), "bottom", "center" or a custom object with { top, left, right, bottom } position
+     */
+    position: "top",
+    /**
+     * The `transitionConfig` prop set the transtion config function used in shown/hide anim interpolations
+     */
+    transitionConfig: FlashMessageTransition,
+    /**
+     * The `MessageComponent` prop set the default flash message render component used to show all the messages
+     */
+    MessageComponent: DefaultFlash,
+  };
+  static propTypes = {
+    canRegisterAsDefault: PropTypes.bool,
+    hideOnPress: PropTypes.bool,
+    onPress: PropTypes.func,
+    animated: PropTypes.bool,
+    animationDuration: PropTypes.number,
+    duration: PropTypes.number,
+    autoHide: PropTypes.bool,
+    position: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.array,
+      PropTypes.object,
+    ]),
+    transitionConfig: PropTypes.func,
+    MessageComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  };
+  /**
+   * Your can customize the default ColorTheme of this component
+   * Use `setColorTheme` static method to override the primary colors/types of flash messages
+   */
   static ColorTheme = {
     success: "#5cb85c",
     info: "#5bc0de",
@@ -185,14 +306,40 @@ export default class FlashMessage extends Component {
       FlashMessageManager.unregister(this);
     }
   }
+  /**
+   * Non-public method
+   */
   prop(message, prop) {
     return !!message && prop in message
       ? message[prop]
       : prop in this.props ? this.props[prop] : null;
   }
+  /**
+   * Non-public method
+   */
   isAnimated(message) {
     return this.prop(message, "animated");
   }
+  /**
+   * Non-public method
+   */
+  pressMessage(event) {
+    if (!this.state.isHidding) {
+      const hideOnPress = this.prop(this.state.message, "hideOnPress");
+      const onPress = this.prop(this.state.message, "onPress");
+
+      if (hideOnPress) {
+        this.hideMessage();
+      }
+
+      if (typeof onPress === "function") {
+        onPress(event);
+      }
+    }
+  }
+  /**
+   * Non-public method
+   */
   toggleVisibility(visible = true, done) {
     const animated = this.prop(this.state.message, "animated");
     if (!animated) {
@@ -246,6 +393,13 @@ export default class FlashMessage extends Component {
       });
     }
   }
+  /**
+   * Instace ref function to handle show messages
+   * Pass some `message` object as first attribute to display a flash message
+   *
+   *  this.refs.YOUR_REF.showMessage({ message: "Contact sent", description "Your message was sent with success", type: "success" })
+   *
+   */
   showMessage(message, description = null, type = "default") {
     if (!!message) {
       let _message = {};
@@ -265,22 +419,18 @@ export default class FlashMessage extends Component {
 
     this.setState({ message: null, isHidding: false });
   }
+  /**
+   * Instace ref function to programmatically hide message
+   *
+   *  this.refs.YOUR_REF.hideMessage()
+   *
+   */
   hideMessage() {
     const animated = this.isAnimated(this.state.message);
     if (!animated) {
       this.setState({ message: null, isHidding: false });
     } else {
       this.toggleVisibility(false);
-    }
-  }
-  pressMessage(event) {
-    if (!this.state.isHidding) {
-      const { hideOnPress, onPress } = this.props;
-      if (hideOnPress) {
-        this.hideMessage();
-      }
-
-      onPress(event);
     }
   }
   render() {
@@ -311,35 +461,6 @@ export default class FlashMessage extends Component {
   }
   _hideTimeout;
   _id;
-
-  static defaultProps = {
-    canRegisterAsDefault: true,
-    hideOnPress: true,
-    onPress: noop,
-    animated: true,
-    animationDuration: 225,
-    duration: 1850,
-    autoHide: true,
-    position: "top",
-    transitionConfig: FlashMessageTransition,
-    MessageComponent: DefaultFlash,
-  };
-  static propTypes = {
-    canRegisterAsDefault: PropTypes.bool,
-    hideOnPress: PropTypes.bool,
-    onPress: PropTypes.func,
-    animated: PropTypes.bool,
-    animationDuration: PropTypes.number,
-    duration: PropTypes.number,
-    autoHide: PropTypes.bool,
-    position: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.array,
-      PropTypes.object,
-    ]),
-    transitionConfig: PropTypes.func,
-    MessageComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-  };
 }
 
 const styles = StyleSheet.create({
