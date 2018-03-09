@@ -1,13 +1,7 @@
 "use strict";
 
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Animated,
-  Text,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, StatusBar, Animated, Text, View } from "react-native";
 
 import PropTypes from "prop-types";
 
@@ -144,14 +138,14 @@ export const DefaultFlash = ({
   style,
   textStyle,
   titleStyle,
-  position,
+  position = "top",
+  hideStatusBar = false,
   ...props
 }) => {
   const hasDescription = !!message.description && message.description !== "";
 
   return (
-    <FlashMessageWrapper
-      position={typeof position === "string" ? position : null}>
+    <FlashMessageWrapper position={typeof position === "string" ? position : null}>
       {wrapperInset => (
         <View
           style={styleWithInset(
@@ -166,7 +160,8 @@ export const DefaultFlash = ({
               position === "center" && styles.defaultFlashCenter,
               style,
             ],
-            wrapperInset
+            wrapperInset,
+            !!hideStatusBar
           )}
           {...props}>
           <View style={styles.flashLabel}>
@@ -180,12 +175,7 @@ export const DefaultFlash = ({
               {message.message}
             </Text>
             {hasDescription && (
-              <Text
-                style={[
-                  styles.flashText,
-                  !!message.color && { color: message.color },
-                  textStyle,
-                ]}>
+              <Text style={[styles.flashText, !!message.color && { color: message.color }, textStyle]}>
                 {message.description}
               </Text>
             )}
@@ -244,6 +234,11 @@ export default class FlashMessage extends Component {
      */
     duration: 1850,
     /**
+     * Controls if the flash message will auto hide the native status bar
+     * Note: Works OK in iOS, not all Android versions support this.
+     */
+    hideStatusBar: false,
+    /**
      * The `position` prop set the position of a flash message
      * Expected options: "top" (default), "bottom", "center" or a custom object with { top, left, right, bottom } position
      */
@@ -267,11 +262,8 @@ export default class FlashMessage extends Component {
     animationDuration: PropTypes.number,
     duration: PropTypes.number,
     autoHide: PropTypes.bool,
-    position: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.array,
-      PropTypes.object,
-    ]),
+    hideStatusBar: PropTypes.bool,
+    position: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
     transitionConfig: PropTypes.func,
     MessageComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   };
@@ -316,9 +308,7 @@ export default class FlashMessage extends Component {
    * Non-public method
    */
   prop(message, prop) {
-    return !!message && prop in message
-      ? message[prop]
-      : prop in this.props ? this.props[prop] : null;
+    return !!message && prop in message ? message[prop] : prop in this.props ? this.props[prop] : null;
   }
   /**
    * Non-public method
@@ -355,12 +345,10 @@ export default class FlashMessage extends Component {
     }
 
     const position = this.prop(message, "position");
-    const animationDuration = this.prop(
-      this.state.message,
-      "animationDuration"
-    );
+    const animationDuration = this.prop(this.state.message, "animationDuration");
     const duration = this.prop(message, "duration");
     const autoHide = this.prop(message, "autoHide");
+    const hideStatusBar = this.prop(message, "hideStatusBar");
 
     if (this._hideTimeout) {
       clearTimeout(this._hideTimeout);
@@ -376,16 +364,17 @@ export default class FlashMessage extends Component {
         onShow(this);
       }
 
+      if (!!hideStatusBar) {
+        StatusBar.setHidden(true, typeof hideStatusBar === "string" ? hideStatusBar : "slide");
+      }
+
       Animated.timing(this.state.visibleValue, {
         toValue: 1,
         duration: animationDuration,
         useNativeDriver: true,
       }).start(() => {
         if (!!autoHide && duration > 0) {
-          this._hideTimeout = setTimeout(
-            () => this.toggleVisibility(false),
-            duration
-          );
+          this._hideTimeout = setTimeout(() => this.toggleVisibility(false), duration);
         }
 
         if (!!done && typeof done === "function") {
@@ -396,6 +385,10 @@ export default class FlashMessage extends Component {
       const onHide = this.prop(message, "onHide") || noop;
 
       this.setState({ isHidding: true });
+
+      if (!!hideStatusBar) {
+        StatusBar.setHidden(false, typeof hideStatusBar === "string" ? hideStatusBar : "slide");
+      }
 
       Animated.timing(this.state.visibleValue, {
         toValue: 0,
@@ -432,10 +425,7 @@ export default class FlashMessage extends Component {
       }
 
       const animated = this.isAnimated(_message);
-      this.setState(
-        { message: _message },
-        () => animated && this.toggleVisibility(true)
-      );
+      this.setState({ message: _message }, () => animated && this.toggleVisibility(true));
       return;
     }
 
@@ -457,11 +447,14 @@ export default class FlashMessage extends Component {
     }
   }
   render() {
-    const { style, textStyle, titleStyle, MessageComponent } = this.props;
-
+    const { MessageComponent } = this.props;
     const { message, visibleValue } = this.state;
 
+    const style = this.prop(message, "style");
+    const textStyle = this.prop(message, "textStyle");
+    const titleStyle = this.prop(message, "titleStyle");
     const position = this.prop(message, "position");
+    const hideStatusBar = this.prop(message, "hideStatusBar");
     const transitionConfig = this.prop(message, "transitionConfig");
     const animated = this.isAnimated(message);
     const animStyle = animated ? transitionConfig(visibleValue, position) : {};
@@ -476,11 +469,12 @@ export default class FlashMessage extends Component {
         {!!message && (
           <TouchableWithoutFeedback onPress={this.pressMessage}>
             <MessageComponent
+              position={position}
               message={message}
+              hideStatusBar={hideStatusBar}
               style={style}
               textStyle={textStyle}
               titleStyle={titleStyle}
-              position={position}
             />
           </TouchableWithoutFeedback>
         )}

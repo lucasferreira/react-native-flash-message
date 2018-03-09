@@ -2,12 +2,7 @@
 
 import FlashMessageManager from "./FlashMessageManager";
 import FlashMessageWrapper, { styleWithInset } from "./FlashMessageWrapper";
-import FlashMessage, {
-  positionStyle,
-  showMessage,
-  hideMessage,
-  FlashMessageTransition,
-} from "./FlashMessage";
+import FlashMessage, { positionStyle, showMessage, hideMessage, FlashMessageTransition } from "./FlashMessage";
 
 export {
   FlashMessageManager,

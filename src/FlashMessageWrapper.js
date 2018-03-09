@@ -22,8 +22,7 @@ const isIPhoneX = (() => {
 
   return (
     Platform.OS === "ios" &&
-    ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) ||
-      (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
+    ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) || (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
   );
 })();
 
@@ -46,7 +45,7 @@ const isIPad = (() => {
 const isOrientationLandscape = ({ width, height }) => width > height;
 
 let _customStatusBarHeight = null;
-const statusBarHeight = isLandscape => {
+const statusBarHeight = (isLandscape = false) => {
   if (_customStatusBarHeight !== null) {
     return _customStatusBarHeight;
   }
@@ -91,7 +90,7 @@ const doubleFromPercentString = percent => {
 /**
  * Helper function to "append" extra padding in MessageComponent style
  */
-export function styleWithInset(style, wrapperInset) {
+export function styleWithInset(style, wrapperInset, hideStatusBar = false) {
   const { width: viewWidth } = Dimensions.get("window");
 
   let {
@@ -123,7 +122,7 @@ export function styleWithInset(style, wrapperInset) {
 
   return {
     ...viewStyle,
-    paddingTop: paddingTop + wrapperInset.insetTop,
+    paddingTop: !!wrapperInset.isIPhoneX || !hideStatusBar ? paddingTop + wrapperInset.insetTop : paddingTop,
     paddingBottom: paddingBottom + wrapperInset.insetBottom,
     paddingLeft: paddingLeft + wrapperInset.insetLeft,
     paddingRight: paddingRight + wrapperInset.insetRight,
@@ -181,16 +180,9 @@ export default class FlashMessageWrapper extends Component {
       isIPad: isIPad,
       statusBarHeight: _statusBarHeight,
       insetTop: position === "top" ? _statusBarHeight : 0,
-      insetLeft:
-        (position === "top" || position === "bottom") && isLandscape
-          ? isIPhoneX ? 21 : 0
-          : 0,
-      insetRight:
-        (position === "top" || position === "bottom") && isLandscape
-          ? isIPhoneX ? 21 : 0
-          : 0,
-      insetBottom:
-        isIPhoneX && position === "bottom" ? (isLandscape ? 24 : 34) : 0,
+      insetLeft: (position === "top" || position === "bottom") && isLandscape ? (isIPhoneX ? 21 : 0) : 0,
+      insetRight: (position === "top" || position === "bottom") && isLandscape ? (isIPhoneX ? 21 : 0) : 0,
+      insetBottom: isIPhoneX && position === "bottom" ? (isLandscape ? 24 : 34) : 0,
     };
 
     return children(wrapper);

@@ -11,10 +11,7 @@ class FlashMessageManager {
     }
   }
   unregister(_ref) {
-    if (
-      !!this._defaultFlashMessage &&
-      this._defaultFlashMessage._id === _ref._id
-    ) {
+    if (!!this._defaultFlashMessage && this._defaultFlashMessage._id === _ref._id) {
       this._defaultFlashMessage = null;
     }
   }

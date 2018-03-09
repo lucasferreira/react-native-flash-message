@@ -4,6 +4,7 @@ var config = {
   extraNodeModules: {
     "prop-types": path.resolve(__dirname, "node_modules/prop-types"),
     "react-native": path.resolve(__dirname, "node_modules/react-native"),
+    "react-navigation": path.resolve(__dirname, "node_modules/react-navigation"),
     react: path.resolve(__dirname, "node_modules/react"),
   },
   getProjectRoots() {
@@ -14,4 +15,5 @@ var config = {
     ];
   },
 };
+
 module.exports = config;
