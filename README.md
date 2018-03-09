@@ -22,7 +22,7 @@ npm install --save react-native-flash-message
 
 ## Try it out
 
-You can also try out the [Flash Message Playground app](https://exp.host/@react-native-flash-message/NavigationPlayground) to get a tease of the functionalities of this lib.
+You can also try out the [Flash Message Playground app](https://expo.io/@lucasferreira/flashmessageplayground) to get a tease of the functionalities of this lib.
 
 ## Documentation
 
