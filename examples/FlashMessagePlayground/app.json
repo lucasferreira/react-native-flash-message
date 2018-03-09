@@ -1,9 +1,11 @@
 {
   "expo": {
+    "name": "FlashMessagePlayground",
+    "version": "1.0.0",
     "sdkVersion": "25.0.0",
-    "packagerOpts": {
-      "projectRoots": "",
-      "config": "rn-cli.config.js"
+    "entryPoint": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+    "ios": {
+      "supportsTablet": true
     }
   }
 }

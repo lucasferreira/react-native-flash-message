@@ -1,19 +1,46 @@
-var path = require("path");
+/**
+ * @noflow
+ */
 
-var config = {
-  extraNodeModules: {
-    "prop-types": path.resolve(__dirname, "node_modules/prop-types"),
-    "react-native": path.resolve(__dirname, "node_modules/react-native"),
-    "react-navigation": path.resolve(__dirname, "node_modules/react-navigation"),
-    react: path.resolve(__dirname, "node_modules/react"),
+const fs = require("fs");
+const path = require("path");
+const blacklist = require("metro/src/blacklist");
+
+module.exports = {
+  getBlacklistRE() {
+    return blacklist([
+      /react\-native\-flash\-message\/examples\/(?!FlashMessagePlayground).*/,
+      /react\-native\-flash\-message\/node_modules\/react-native\/(.*)/,
+      /react\-native\-flash\-message\/node_modules\/react\/(.*)/,
+    ]);
   },
-  getProjectRoots() {
-    return [
-      // Keep your project directory.
-      path.resolve(__dirname),
-      path.resolve(__dirname, "../../src"), // path to the external module
-    ];
-  },
+  extraNodeModules: getNodeModulesForDirectory(path.resolve(".")),
 };
 
-module.exports = config;
+function getNodeModulesForDirectory(rootPath) {
+  const nodeModulePath = path.join(rootPath, "node_modules");
+  const folders = fs.readdirSync(nodeModulePath);
+  return folders.reduce((modules, folderName) => {
+    const folderPath = path.join(nodeModulePath, folderName);
+    if (folderName.startsWith("@")) {
+      const scopedModuleFolders = fs.readdirSync(folderPath);
+      const scopedModules = scopedModuleFolders.reduce((scopedModules, scopedFolderName) => {
+        scopedModules[`${folderName}/${scopedFolderName}`] = maybeResolveSymlink(
+          path.join(folderPath, scopedFolderName)
+        );
+        return scopedModules;
+      }, {});
+      return Object.assign({}, modules, scopedModules);
+    }
+    modules[folderName] = maybeResolveSymlink(folderPath);
+    return modules;
+  }, {});
+}
+
+function maybeResolveSymlink(maybeSymlinkPath) {
+  if (fs.lstatSync(maybeSymlinkPath).isSymbolicLink()) {
+    const resolved = path.resolve(path.dirname(maybeSymlinkPath), fs.readlinkSync(maybeSymlinkPath));
+    return resolved;
+  }
+  return maybeSymlinkPath;
+}

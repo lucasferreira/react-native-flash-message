@@ -1,7 +1,7 @@
 import React from "react";
 import { StatusBar, View } from "react-native";
 
-import FlashMessage from "../../src";
+import FlashMessage from "react-native-flash-message";
 
 import AppStack from "./stacks/AppStack";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, StatusBar, TouchableOpacity, ScrollView, Text, View } from "react-native";
 
-import FlashMessage, { showMessage, hideMessage } from "../../../src";
+import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
 
 import DemoButton from "../components/DemoButton";
 

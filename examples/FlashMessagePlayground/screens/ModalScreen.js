@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, ScrollView, Text, View } from "react-native";
 
-import { showMessage, hideMessage } from "../../../src";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 import DemoButton from "../components/DemoButton";
 
