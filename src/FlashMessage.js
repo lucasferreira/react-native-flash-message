@@ -336,16 +336,11 @@ export default class FlashMessage extends Component {
   /**
    * Non-public method
    */
-  toggleVisibility(visible = true, done) {
+  toggleVisibility(visible = true, animated = true, done) {
     const { message } = this.state;
 
-    const animated = this.prop(message, "animated");
-    if (!animated) {
-      return;
-    }
-
     const position = this.prop(message, "position");
-    const animationDuration = this.prop(this.state.message, "animationDuration");
+    const animationDuration = this.prop(message, "animationDuration");
     const duration = this.prop(message, "duration");
     const autoHide = this.prop(message, "autoHide");
     const hideStatusBar = this.prop(message, "hideStatusBar");
@@ -356,6 +351,15 @@ export default class FlashMessage extends Component {
 
     if (visible) {
       const onShow = this.prop(message, "onShow") || noop;
+      const finish = () => {
+        if (!!autoHide && duration > 0) {
+          this._hideTimeout = setTimeout(() => this.toggleVisibility(false, animated), duration);
+        }
+
+        if (!!done && typeof done === "function") {
+          done();
+        }
+      };
 
       this.setState({ isHidding: false });
       this.state.visibleValue.setValue(0);
@@ -368,33 +372,18 @@ export default class FlashMessage extends Component {
         StatusBar.setHidden(true, typeof hideStatusBar === "string" ? hideStatusBar : "slide");
       }
 
-      Animated.timing(this.state.visibleValue, {
-        toValue: 1,
-        duration: animationDuration,
-        useNativeDriver: true,
-      }).start(() => {
-        if (!!autoHide && duration > 0) {
-          this._hideTimeout = setTimeout(() => this.toggleVisibility(false), duration);
-        }
-
-        if (!!done && typeof done === "function") {
-          done();
-        }
-      });
+      if (animated) {
+        Animated.timing(this.state.visibleValue, {
+          toValue: 1,
+          duration: animationDuration,
+          useNativeDriver: true,
+        }).start(finish);
+      } else {
+        finish();
+      }
     } else {
       const onHide = this.prop(message, "onHide") || noop;
-
-      this.setState({ isHidding: true });
-
-      if (!!hideStatusBar) {
-        StatusBar.setHidden(false, typeof hideStatusBar === "string" ? hideStatusBar : "slide");
-      }
-
-      Animated.timing(this.state.visibleValue, {
-        toValue: 0,
-        duration: animationDuration,
-        useNativeDriver: true,
-      }).start(() => {
+      const finish = () => {
         this.setState({ message: null, isHidding: false });
 
         if (!!onHide && typeof onHide === "function") {
@@ -404,7 +393,23 @@ export default class FlashMessage extends Component {
         if (!!done && typeof done === "function") {
           done();
         }
-      });
+      };
+
+      this.setState({ isHidding: true });
+
+      if (!!hideStatusBar) {
+        StatusBar.setHidden(false, typeof hideStatusBar === "string" ? hideStatusBar : "slide");
+      }
+
+      if (animated) {
+        Animated.timing(this.state.visibleValue, {
+          toValue: 0,
+          duration: animationDuration,
+          useNativeDriver: true,
+        }).start(finish);
+      } else {
+        finish();
+      }
     }
   }
   /**
@@ -425,7 +430,7 @@ export default class FlashMessage extends Component {
       }
 
       const animated = this.isAnimated(_message);
-      this.setState({ message: _message }, () => animated && this.toggleVisibility(true));
+      this.setState({ message: _message }, () => this.toggleVisibility(true, animated));
       return;
     }
 
@@ -440,11 +445,7 @@ export default class FlashMessage extends Component {
    */
   hideMessage() {
     const animated = this.isAnimated(this.state.message);
-    if (!animated) {
-      this.setState({ message: null, isHidding: false });
-    } else {
-      this.toggleVisibility(false);
-    }
+    this.toggleVisibility(false, animated);
   }
   render() {
     const { MessageComponent } = this.props;
