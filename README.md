@@ -61,7 +61,7 @@ If you don't need a global use for *(e.g. will use only in one screen)* you can 
 
 ### Show some message
 
-When you need to show some message in your app you could use the `showMessage` method. This is a global method that receive a *message object* with your message detail:
+Now that you already instantiated the global *FlashMessage component*, when you need to show some message in your app you could use the `showMessage` method in any screen or view. This is a global method that receive a *message object* with your message detail:
 
 ```javascript
 import React from "react";
@@ -94,9 +94,9 @@ The message object obligatorily requires some `message` attribute. If you need t
 
 ```javascript
 showMessage({
-	message: "Hello World",
-	description: "This is our second message",
-	type: "success"
+  message: "Hello World",
+  description: "This is our second message",
+  type: "success"
 });
 ```
 
@@ -146,7 +146,7 @@ showMessage({
   description: "My message description",
   type: "success",
   onPress: () => {
-	/* THIS FUNC/CB WILL BE CALLED AFTER MESSAGE PRESS */
+    /* THIS FUNC/CB WILL BE CALLED AFTER MESSAGE PRESS */
   }
 });
 ```
