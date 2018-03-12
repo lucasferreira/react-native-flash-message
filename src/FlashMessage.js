@@ -92,7 +92,7 @@ export function hideMessage(...args) {
 }
 
 /**
- * Default transtion config for FlashMessage component
+ * Default transition config for FlashMessage component
  * You can create your own transition config with interpolation, just remember to return some style object with transform options
  */
 export function FlashMessageTransition(animValue, position = "top") {
@@ -244,7 +244,7 @@ export default class FlashMessage extends Component {
      */
     position: "top",
     /**
-     * The `transitionConfig` prop set the transtion config function used in shown/hide anim interpolations
+     * The `transitionConfig` prop set the transition config function used in shown/hide anim interpolations
      */
     transitionConfig: FlashMessageTransition,
     /**
@@ -321,15 +321,16 @@ export default class FlashMessage extends Component {
    */
   pressMessage(event) {
     if (!this.state.isHidding) {
-      const hideOnPress = this.prop(this.state.message, "hideOnPress");
-      const onPress = this.prop(this.state.message, "onPress");
+      const { message } = this.state;
+      const hideOnPress = this.prop(message, "hideOnPress");
+      const onPress = this.prop(message, "onPress");
 
       if (hideOnPress) {
         this.hideMessage();
       }
 
       if (typeof onPress === "function") {
-        onPress(event);
+        onPress(event, message);
       }
     }
   }
