@@ -1,7 +1,7 @@
 "use strict";
 
 import React, { Component } from "react";
-import { StyleSheet, TouchableWithoutFeedback, StatusBar, Animated, Text, View } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, StatusBar, Animated, Image, Text, View } from "react-native";
 
 import PropTypes from "prop-types";
 
@@ -44,6 +44,21 @@ function srid() {
   }
 
   return `${s4()}-${s4()}-${s4()}`;
+}
+
+/**
+ * Translates icon prop value into complex internal object
+ */
+function parseIcon(icon = "none") {
+  if (!!icon && icon !== "none") {
+    if (typeof icon === "string") {
+      return { icon, position: "left", style: {} };
+    }
+
+    return { position: "left", style: {}, ...icon };
+  }
+
+  return null;
 }
 
 /**
@@ -128,6 +143,27 @@ export function FlashMessageTransition(animValue, position = "top") {
   };
 }
 
+export const renderFlashMessageIcon = (icon = "success", style = {}, customProps = {}) => {
+  switch (icon) {
+    case "success":
+      return (
+        <Image style={[styles.flashIcon, style]} source={require("./icons/fm_icon_success.png")} {...customProps} />
+      );
+    case "info":
+      return <Image style={[styles.flashIcon, style]} source={require("./icons/fm_icon_info.png")} {...customProps} />;
+    case "warning":
+      return (
+        <Image style={[styles.flashIcon, style]} source={require("./icons/fm_icon_warning.png")} {...customProps} />
+      );
+    case "danger":
+      return (
+        <Image style={[styles.flashIcon, style]} source={require("./icons/fm_icon_danger.png")} {...customProps} />
+      );
+    default:
+      return null;
+  }
+};
+
 /**
  * Default MessageComponent used in FlashMessage
  * This component it's wrapped in `FlashMessageWrapper` to handle orientation change and extra inset padding in special devices
@@ -138,11 +174,22 @@ export const DefaultFlash = ({
   style,
   textStyle,
   titleStyle,
+  renderFlashMessageIcon,
   position = "top",
+  icon,
   hideStatusBar = false,
   ...props
 }) => {
   const hasDescription = !!message.description && message.description !== "";
+  const iconView =
+    !!icon &&
+    !!icon.icon &&
+    renderFlashMessageIcon(icon.icon === "auto" ? message.type : icon.icon, [
+      icon.position === "left" && styles.flashIconLeft,
+      icon.position === "right" && styles.flashIconRight,
+      icon.style,
+    ]);
+  const hasIcon = !!iconView;
 
   return (
     <FlashMessageWrapper position={typeof position === "string" ? position : null}>
@@ -151,19 +198,21 @@ export const DefaultFlash = ({
           style={styleWithInset(
             [
               styles.defaultFlash,
+              position === "center" && styles.defaultFlashCenter,
+              hasIcon && styles.defaultFlashWithIcon,
               !!message.backgroundColor
                 ? { backgroundColor: message.backgroundColor }
                 : !!message.type &&
                   !!FlashMessage.ColorTheme[message.type] && {
                     backgroundColor: FlashMessage.ColorTheme[message.type],
                   },
-              position === "center" && styles.defaultFlashCenter,
               style,
             ],
             wrapperInset,
             !!hideStatusBar
           )}
           {...props}>
+          {hasIcon && icon.position === "left" && iconView}
           <View style={styles.flashLabel}>
             <Text
               style={[
@@ -180,6 +229,7 @@ export const DefaultFlash = ({
               </Text>
             )}
           </View>
+          {hasIcon && icon.position === "right" && iconView}
         </View>
       )}
     </FlashMessageWrapper>
@@ -188,6 +238,7 @@ export const DefaultFlash = ({
 
 DefaultFlash.propTypes = {
   message: MessagePropType,
+  renderFlashMessageIcon: PropTypes.func,
 };
 
 /**
@@ -244,6 +295,15 @@ export default class FlashMessage extends Component {
      */
     position: "top",
     /**
+     * The `icon` prop set the graphical icon of a flash message
+     * Expected options: "none" (default), "auto" (guided by `type`), "success", "info", "warning", "danger" or a custom object with icon type/name and position (left or right) attributes, e.g.: { icon: "success", position: "right" }
+     */
+    icon: "none",
+    /**
+     * The `renderFlashMessageIcon` prop set a custom render function for inside message icons
+     */
+    renderFlashMessageIcon,
+    /**
      * The `transitionConfig` prop set the transition config function used in shown/hide anim interpolations
      */
     transitionConfig: FlashMessageTransition,
@@ -264,6 +324,8 @@ export default class FlashMessage extends Component {
     autoHide: PropTypes.bool,
     hideStatusBar: PropTypes.bool,
     position: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
+    icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    renderFlashMessageIcon: PropTypes.func,
     transitionConfig: PropTypes.func,
     MessageComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   };
@@ -449,13 +511,14 @@ export default class FlashMessage extends Component {
     this.toggleVisibility(false, animated);
   }
   render() {
-    const { MessageComponent } = this.props;
+    const { renderFlashMessageIcon, MessageComponent } = this.props;
     const { message, visibleValue } = this.state;
 
     const style = this.prop(message, "style");
     const textStyle = this.prop(message, "textStyle");
     const titleStyle = this.prop(message, "titleStyle");
     const position = this.prop(message, "position");
+    const icon = parseIcon(this.prop(message, "icon"));
     const hideStatusBar = this.prop(message, "hideStatusBar");
     const transitionConfig = this.prop(message, "transitionConfig");
     const animated = this.isAnimated(message);
@@ -474,6 +537,8 @@ export default class FlashMessage extends Component {
               position={position}
               message={message}
               hideStatusBar={hideStatusBar}
+              renderFlashMessageIcon={renderFlashMessageIcon}
+              icon={icon}
               style={style}
               textStyle={textStyle}
               titleStyle={titleStyle}
@@ -512,15 +577,25 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   defaultFlash: {
+    justifyContent: "center",
     paddingVertical: 15,
     paddingHorizontal: 20,
     backgroundColor: "#696969",
     minHeight: OFFSET_HEIGHT,
   },
   defaultFlashCenter: {
+    alignItems: "center",
+    justifyContent: "flex-start",
     margin: 44,
     borderRadius: 8,
     overflow: "hidden",
+  },
+  defaultFlashWithIcon: {
+    flexDirection: "row",
+  },
+  flashLabel: {
+    flex: 1,
+    flexDirection: "column",
   },
   flashText: {
     fontSize: 14,
@@ -531,5 +606,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 5,
+  },
+  flashIcon: {
+    tintColor: "#fff",
+    marginTop: -1,
+    width: 21,
+    height: 21,
+  },
+  flashIconLeft: {
+    marginLeft: -6,
+    marginRight: 9,
+  },
+  flashIconRight: {
+    marginRight: -6,
+    marginLeft: 9,
   },
 });

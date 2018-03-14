@@ -15,6 +15,7 @@ export default class MainScreen extends React.Component {
     const message = {
       message: "Some message title",
       description: "Lorem ipsum dolar sit amet",
+      icon: { icon: "auto", position: "left" },
       type,
       ...props,
     };
