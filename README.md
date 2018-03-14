@@ -159,7 +159,13 @@ showMessage({
 
 The main _MessageComponent_ (responsible for render the messages) it's `DefaultFlash`. This component it's wrapped in other component called `FlashMessageWrapper` that handles device orientations, statusbar heights and principal wheater or not include the iPhone X "noch" inset padding:
 
-![iPhone X](https://i.imgur.com/BfFrInC.gif) ![iPhone X Landscape](https://i.imgur.com/BtHCxus.gif)
+<p align="center">
+  <img src="https://i.imgur.com/BfFrInC.gif" alt="iPhone X"/>
+</p>
+
+<p align="center">
+  <img src="https://i.imgur.com/BtHCxus.gif" alt="iPhone X Landscape"/>
+</p>
 
 ## Documentation
 
