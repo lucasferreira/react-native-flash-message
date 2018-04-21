@@ -93,6 +93,11 @@ export default class MainScreen extends React.Component {
                 label="Custom Text Color"
                 onPress={() => this.showSimpleMessage("default", { backgroundColor: "cyan", color: "red" })}
               />
+              <DemoButton
+                style={[styles.demoButton, { backgroundColor: FlashMessage.ColorTheme.success }]}
+                label="Success (Floating)"
+                onPress={() => this.showSimpleMessage("success", { floating: true })}
+              />
             </View>
             <Sepator />
             <View style={styles.group}>

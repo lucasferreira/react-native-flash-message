@@ -176,6 +176,7 @@ export const DefaultFlash = ({
   titleStyle,
   renderFlashMessageIcon,
   position = "top",
+  floating = false,
   icon,
   hideStatusBar = false,
   ...props
@@ -199,6 +200,7 @@ export const DefaultFlash = ({
             [
               styles.defaultFlash,
               position === "center" && styles.defaultFlashCenter,
+              position !== "center" && floating && styles.defaultFlashFloating,
               hasIcon && styles.defaultFlashWithIcon,
               !!message.backgroundColor
                 ? { backgroundColor: message.backgroundColor }
@@ -209,7 +211,8 @@ export const DefaultFlash = ({
               style,
             ],
             wrapperInset,
-            !!hideStatusBar
+            !!hideStatusBar,
+            position !== "center" && floating ? "margin" : "padding"
           )}
           {...props}>
           {hasIcon && icon.position === "left" && iconView}
@@ -290,6 +293,10 @@ export default class FlashMessage extends Component {
      */
     hideStatusBar: false,
     /**
+     * The `floating` prop unstick the message from the edges and applying some border radius to component
+     */
+    floating: false,
+    /**
      * The `position` prop set the position of a flash message
      * Expected options: "top" (default), "bottom", "center" or a custom object with { top, left, right, bottom } position
      */
@@ -323,6 +330,7 @@ export default class FlashMessage extends Component {
     duration: PropTypes.number,
     autoHide: PropTypes.bool,
     hideStatusBar: PropTypes.bool,
+    floating: PropTypes.bool,
     position: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
     icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     renderFlashMessageIcon: PropTypes.func,
@@ -517,6 +525,7 @@ export default class FlashMessage extends Component {
     const style = this.prop(message, "style");
     const textStyle = this.prop(message, "textStyle");
     const titleStyle = this.prop(message, "titleStyle");
+    const floating = this.prop(message, "floating");
     const position = this.prop(message, "position");
     const icon = parseIcon(this.prop(message, "icon"));
     const hideStatusBar = this.prop(message, "hideStatusBar");
@@ -535,6 +544,7 @@ export default class FlashMessage extends Component {
           <TouchableWithoutFeedback onPress={this.pressMessage}>
             <MessageComponent
               position={position}
+              floating={floating}
               message={message}
               hideStatusBar={hideStatusBar}
               renderFlashMessageIcon={renderFlashMessageIcon}
@@ -570,31 +580,32 @@ const styles = StyleSheet.create({
   },
   rootCenterEnabled: {
     top: 0,
-    left: 0,
-    right: 0,
     bottom: 0,
     width: "100%",
     height: "100%",
   },
   defaultFlash: {
-    justifyContent: "center",
+    justifyContent: "flex-start",
     paddingVertical: 15,
     paddingHorizontal: 20,
     backgroundColor: "#696969",
     minHeight: OFFSET_HEIGHT,
   },
   defaultFlashCenter: {
-    alignItems: "center",
-    justifyContent: "flex-start",
     margin: 44,
     borderRadius: 8,
     overflow: "hidden",
+  },
+  defaultFlashFloating: {
+    marginTop: 10,
+    marginLeft: 12,
+    marginRight: 12,
+    borderRadius: 8,
   },
   defaultFlashWithIcon: {
     flexDirection: "row",
   },
   flashLabel: {
-    flex: 1,
     flexDirection: "column",
   },
   flashText: {

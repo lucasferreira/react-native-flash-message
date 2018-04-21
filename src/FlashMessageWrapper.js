@@ -90,7 +90,11 @@ const doubleFromPercentString = percent => {
 /**
  * Helper function to "append" extra padding in MessageComponent style
  */
-export function styleWithInset(style, wrapperInset, hideStatusBar = false) {
+export function styleWithInset(style, wrapperInset, hideStatusBar = false, prop = "padding") {
+  if (prop === "margin") {
+    return styleWithInsetMargin(style, wrapperInset, hideStatusBar);
+  }
+
   const { width: viewWidth } = Dimensions.get("window");
 
   let {
@@ -126,6 +130,48 @@ export function styleWithInset(style, wrapperInset, hideStatusBar = false) {
     paddingBottom: paddingBottom + wrapperInset.insetBottom,
     paddingLeft: paddingLeft + wrapperInset.insetLeft,
     paddingRight: paddingRight + wrapperInset.insetRight,
+  };
+}
+
+/**
+ * Helper function to "append" extra margin in MessageComponent style
+ */
+export function styleWithInsetMargin(style, wrapperInset, hideStatusBar = false) {
+  const { width: viewWidth } = Dimensions.get("window");
+
+  let {
+    margin = 0,
+    marginVertical = margin,
+    marginHorizontal = margin,
+    marginTop = marginVertical,
+    marginBottom = marginVertical,
+    marginLeft = marginHorizontal,
+    marginRight = marginHorizontal,
+    ...viewStyle
+  } = StyleSheet.flatten(style || {});
+
+  if (typeof marginTop !== "number") {
+    marginTop = doubleFromPercentString(marginTop) * viewWidth;
+  }
+
+  if (typeof marginBottom !== "number") {
+    marginBottom = doubleFromPercentString(marginBottom) * viewWidth;
+  }
+
+  if (typeof marginLeft !== "number") {
+    marginLeft = doubleFromPercentString(marginLeft) * viewWidth;
+  }
+
+  if (typeof marginRight !== "number") {
+    marginRight = doubleFromPercentString(marginRight) * viewWidth;
+  }
+
+  return {
+    ...viewStyle,
+    marginTop: !!wrapperInset.isIPhoneX || !hideStatusBar ? marginTop + wrapperInset.insetTop : marginTop,
+    marginBottom: marginBottom + wrapperInset.insetBottom,
+    marginLeft: marginLeft + wrapperInset.insetLeft,
+    marginRight: marginRight + wrapperInset.insetRight,
   };
 }
 
