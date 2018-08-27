@@ -57,7 +57,7 @@ If you don't need a global use for _(e.g. will use only in one screen)_ you can 
 ```javascript
 <View style={{ flex: 1 }}>
   <YourMainApp />
-  <FlasshMessage ref="myLocalFlashMessage" />   {/* <--- here as last component always with `ref` */}
+  <FlashMessage ref="myLocalFlashMessage" />   {/* <--- here as last component always with `ref` */}
 <View>
 ```
 
