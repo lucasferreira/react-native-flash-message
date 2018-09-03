@@ -3,6 +3,7 @@
   "version": "0.1.9",
   "description": "React Native flashbar and top notification alert utility",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "repository": "https://github.com/lucasferreira/react-native-flash-message.git",
   "keywords": [
     "react",
