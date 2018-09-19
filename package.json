@@ -1,6 +1,6 @@
 {
   "name": "react-native-flash-message",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "React Native flashbar and top notification alert utility",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -29,15 +29,15 @@
     "src"
   ],
   "peerDependencies": {
+    "prop-types": "^15.0 || ^16.0",
     "react": "*",
-    "react-native": "*",
-    "prop-types": "^15.0 || ^16.0"
+    "react-native": "*"
   },
   "dependencies": {
-    "prop-types": "^15.6.1"
+    "prop-types": "^15.6.2"
   },
   "devDependencies": {
-    "prettier": "^1.11.1",
+    "prettier": "^1.14.3",
     "react": "^16.2.0",
     "react-native": "^0.54.0"
   }

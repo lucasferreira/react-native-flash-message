@@ -1,12 +1,21 @@
-﻿# react-native-flash-message
+﻿<h1 align="center" style="text-align: center;">react-native-flash-message</h1>
 
-React Native module to help you with easily and highly customizable flashbars, top notifications or alerts (with iPhone X "notch" support).
+<p align="center" style="font-size: 1.2rem;">
+  <strong>Flash Message</strong> it is a React Native module to help you with easily and highly customizable flashbars, top notifications or alerts <i>(with iPhone X "notch" support)</i>.<br /><br />
+  <img src="https://i.imgur.com/t4COoWT.gif" alt="Global Demo of Flash Message Component" width="86%" style="border: 0; width: 86%; min-width: 240px; max-width: 100%;" />
+</p>
 
-[![npm version](http://img.shields.io/npm/v/react-native-flash-message.svg?style=flat-square)](https://npmjs.org/package/react-native-flash-message "View this project on npm")
-[![npm downloads](http://img.shields.io/npm/dm/react-native-flash-message.svg?style=flat-square)](https://npmjs.org/package/react-native-flash-message "View this project on npm")
-[![npm licence](http://img.shields.io/npm/l/react-native-flash-message.svg?style=flat-square)](https://npmjs.org/package/react-native-flash-message "View this project on npm")
-
-![Global Demo of Flash Message Component](https://i.imgur.com/bCCr0Sy.gif)
+<p align="center" style="font-size: 1.2rem;">
+  <a href="https://npmjs.org/package/react-native-flash-message" title="View this project on npm">
+    <img src="http://img.shields.io/npm/v/react-native-flash-message.svg?style=flat-square" alt="npm version" />
+  </a>
+  <a href="https://npmjs.org/package/react-native-flash-message" title="View this project on npm">
+    <img src="http://img.shields.io/npm/dm/react-native-flash-message.svg?style=flat-square" alt="npm downloads" />
+  </a>
+  <a href="https://npmjs.org/package/react-native-flash-message" title="View this project on npm">
+    <img src="http://img.shields.io/npm/l/react-native-flash-message.svg?style=flat-square" alt="npm licence" />
+  </a>
+</p>
 
 ## Installation
 
