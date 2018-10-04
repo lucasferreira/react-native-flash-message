@@ -272,6 +272,10 @@ export default class FlashMessage extends Component {
      */
     onPress: noop,
     /**
+     * `onLongPress` callback for flash message long press
+     */
+    onLongPress: noop,
+    /**
      * Controls if the flash message will be shown with animation or not
      */
     animated: true,
@@ -325,6 +329,7 @@ export default class FlashMessage extends Component {
     onShow: PropTypes.func,
     onHide: PropTypes.func,
     onPress: PropTypes.func,
+    onLongPress: PropTypes.func,
     animated: PropTypes.bool,
     animationDuration: PropTypes.number,
     duration: PropTypes.number,
@@ -355,6 +360,7 @@ export default class FlashMessage extends Component {
 
     this.prop = this.prop.bind(this);
     this.pressMessage = this.pressMessage.bind(this);
+    this.longPressMessage = this.longPressMessage.bind(this);
     this.toggleVisibility = this.toggleVisibility.bind(this);
     if (!this._id) this._id = srid();
 
@@ -401,6 +407,24 @@ export default class FlashMessage extends Component {
 
       if (typeof onPress === "function") {
         onPress(event, message);
+      }
+    }
+  }
+  /**
+   * Non-public method
+   */
+	longPressMessage(event) {
+    if (!this.state.isHidding) {
+      const { message } = this.state;
+      const hideOnPress = this.prop(message, "hideOnPress");
+      const onLongPress = this.prop(message, "onLongPress");
+
+      if (hideOnPress) {
+        this.hideMessage();
+      }
+
+      if (typeof onLongPress === "function") {
+        onLongPress(event, message);
       }
     }
   }
@@ -541,7 +565,7 @@ export default class FlashMessage extends Component {
           animStyle,
         ]}>
         {!!message && (
-          <TouchableWithoutFeedback onPress={this.pressMessage}>
+          <TouchableWithoutFeedback onLongPress={this.longPressMessage} onPress={this.pressMessage}>
             <MessageComponent
               position={position}
               floating={floating}
