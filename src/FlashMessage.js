@@ -179,6 +179,7 @@ export const DefaultFlash = ({
   floating = false,
   icon,
   hideStatusBar = false,
+  isTranslucentOnAndroid = false,
   ...props
 }) => {
   const hasDescription = !!message.description && message.description !== "";
@@ -193,7 +194,7 @@ export const DefaultFlash = ({
   const hasIcon = !!iconView;
 
   return (
-    <FlashMessageWrapper position={typeof position === "string" ? position : null}>
+    <FlashMessageWrapper isTranslucentOnAndroid={isTranslucentOnAndroid} position={typeof position === "string" ? position : null}>
       {wrapperInset => (
         <View
           style={styleWithInset(
@@ -318,6 +319,11 @@ export default class FlashMessage extends Component {
      * The `MessageComponent` prop set the default flash message render component used to show all the messages
      */
     MessageComponent: DefaultFlash,
+    /**
+     * The `isTranslucentOnAndroid` prop set when set, will apply padding to the message equal to the status bar height when rendering on android
+     * Use this when you have a transparent status bar
+     */
+    isTranslucentOnAndroid: false,
   };
   static propTypes = {
     canRegisterAsDefault: PropTypes.bool,
@@ -336,6 +342,7 @@ export default class FlashMessage extends Component {
     renderFlashMessageIcon: PropTypes.func,
     transitionConfig: PropTypes.func,
     MessageComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+    isTranslucentOnAndroid: PropTypes.bool,
   };
   /**
    * Your can customize the default ColorTheme of this component
@@ -519,7 +526,7 @@ export default class FlashMessage extends Component {
     this.toggleVisibility(false, animated);
   }
   render() {
-    const { renderFlashMessageIcon, MessageComponent } = this.props;
+    const { renderFlashMessageIcon, MessageComponent, isTranslucentOnAndroid } = this.props;
     const { message, visibleValue } = this.state;
 
     const style = this.prop(message, "style");
@@ -552,6 +559,7 @@ export default class FlashMessage extends Component {
               style={style}
               textStyle={textStyle}
               titleStyle={titleStyle}
+              isTranslucentOnAndroid={isTranslucentOnAndroid}
             />
           </TouchableWithoutFeedback>
         )}
