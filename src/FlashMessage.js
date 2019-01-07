@@ -243,6 +243,7 @@ export const DefaultFlash = ({
 DefaultFlash.propTypes = {
   message: MessagePropType,
   renderFlashMessageIcon: PropTypes.func,
+  isTranslucentOnAndroid: PropTypes.bool,
 };
 
 /**

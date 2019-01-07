@@ -194,6 +194,7 @@ export default class FlashMessageWrapper extends Component {
   static propTypes = {
     position: PropTypes.string,
     children: PropTypes.func.isRequired,
+    isTranslucentOnAndroid:: PropTypes.bool,
   };
   static setStatusBarHeight = height => {
     _customStatusBarHeight = height;
