@@ -59,6 +59,9 @@ const statusBarHeight = (isLandscape = false, isTranslucentOnAndroid = false) =>
   if (Platform.OS === "android") {
     if(isTranslucentOnAndroid === true) {
       return StatusBar.currentHeight;
+    //we keep this logic branch to maintain backwards compatability with people on expo who rely on this behavior
+    } else if(global.Expo) {
+      return global.Expo.Constants.statusBarHeight;
     } else {
       return 0;
     }
@@ -194,7 +197,7 @@ export default class FlashMessageWrapper extends Component {
   static propTypes = {
     position: PropTypes.string,
     children: PropTypes.func.isRequired,
-    isTranslucentOnAndroid:: PropTypes.bool,
+    isTranslucentOnAndroid: PropTypes.bool,
   };
   static setStatusBarHeight = height => {
     _customStatusBarHeight = height;
