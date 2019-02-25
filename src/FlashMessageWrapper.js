@@ -56,9 +56,7 @@ const statusBarHeight = (isLandscape = false) => {
   }
 
   if (isIPhoneX) {
-    console.log("test", getStatusBarHeight());
-    return getStatusBarHeight();
-    //return isLandscape ? 0 : 44;
+    return isLandscape ? 0 : getStatusBarHeight();
   }
 
   if (isIPad) {
