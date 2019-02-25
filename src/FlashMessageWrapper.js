@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 import { Dimensions, Platform, StyleSheet } from "react-native";
-
+import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
 import PropTypes from "prop-types";
 
 /**
@@ -10,21 +10,12 @@ import PropTypes from "prop-types";
  * https://github.com/react-community/react-native-safe-area-view
  */
 
-const X_WIDTH = 375; // iPhone X
-const X_HEIGHT = 812; // iPhone X
 const PAD_WIDTH = 768; // iPad
 const PAD_HEIGHT = 1024; // iPad
 
 const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get("window");
 
-const isIPhoneX = (() => {
-  if (Platform.OS === "web") return false;
-
-  return (
-    Platform.OS === "ios" &&
-    ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) || (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
-  );
-})();
+const isIPhoneX = isIPhoneX();
 
 const isIPad = (() => {
   if (Platform.OS !== "ios" || isIPhoneX) return false;
@@ -65,7 +56,9 @@ const statusBarHeight = (isLandscape = false) => {
   }
 
   if (isIPhoneX) {
-    return isLandscape ? 0 : 44;
+    console.log("test", getStatusBarHeight());
+    return getStatusBarHeight();
+    //return isLandscape ? 0 : 44;
   }
 
   if (isIPad) {
