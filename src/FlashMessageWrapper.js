@@ -15,7 +15,7 @@ const PAD_HEIGHT = 1024; // iPad
 
 const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get("window");
 
-const isIPhoneX = isIPhoneX();
+const isIPhoneX = isIphoneX();
 
 const isIPad = (() => {
   if (Platform.OS !== "ios" || isIPhoneX) return false;
