@@ -19,6 +19,7 @@
     "react": "16.5.0",
     "react-native": "^0.57.1",
     "react-native-flash-message": "link:../..",
+    "react-native-iphone-x-helper": "^1.2.0",
     "react-navigation": "^1.5.0"
   },
   "devDependencies": {

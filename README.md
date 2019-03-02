@@ -1,7 +1,7 @@
 ﻿<h1 align="center" style="text-align: center;">react-native-flash-message</h1>
 
 <p align="center" style="font-size: 1.2rem;">
-  <strong>Flash Message</strong> it is a React Native module to help you with easily and highly customizable flashbars, top notifications or alerts <i>(with iPhone X "notch" support)</i>.<br /><br />
+  <strong>Flash Message</strong> it is a React Native module to help you with easily and highly customizable flashbars, top notifications or alerts <i>(with iPhone X, XR, XS and XS Max "notch" support)</i>.<br /><br />
   <img src="https://i.imgur.com/t4COoWT.gif" alt="Global Demo of Flash Message Component" width="86%" style="border: 0; width: 86%; min-width: 240px; max-width: 100%;" />
 </p>
 

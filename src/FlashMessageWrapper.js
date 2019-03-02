@@ -15,6 +15,8 @@ const PAD_HEIGHT = 1024; // iPad
 
 const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get("window");
 
+const isAndroid = Platform.OS === "android";
+
 const isIPhoneX = isIphoneX();
 
 const isIPad = (() => {
@@ -47,16 +49,16 @@ const statusBarHeight = (isLandscape = false) => {
    * factor in the height here; if translucent (content renders under it) then
    * we do.
    */
-  if (Platform.OS === "android") {
+  if (isAndroid) {
     if (global.Expo) {
-      return global.Expo.Constants.statusBarHeight;
+      return global.Expo.Constants.statusBarHeight + 6;
     } else {
-      return 0;
+      return 6;
     }
   }
 
   if (isIPhoneX) {
-    return isLandscape ? 0 : getStatusBarHeight();
+    return isLandscape ? 0 : getStatusBarHeight(true);
   }
 
   if (isIPad) {
@@ -219,7 +221,7 @@ export default class FlashMessageWrapper extends Component {
       insetTop: position === "top" ? _statusBarHeight : 0,
       insetLeft: (position === "top" || position === "bottom") && isLandscape ? (isIPhoneX ? 21 : 0) : 0,
       insetRight: (position === "top" || position === "bottom") && isLandscape ? (isIPhoneX ? 21 : 0) : 0,
-      insetBottom: isIPhoneX && position === "bottom" ? (isLandscape ? 24 : 34) : 0,
+      insetBottom: isIPhoneX && position === "bottom" ? (isLandscape ? 24 : 34) : isAndroid ? 2 : 0,
     };
 
     return children(wrapper);
