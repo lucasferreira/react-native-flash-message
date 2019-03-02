@@ -1,8 +1,8 @@
 "use strict";
 
 import React, { Component } from "react";
-import { StyleSheet, TouchableWithoutFeedback, StatusBar, Animated, Image, Text, View } from "react-native";
-
+import { StyleSheet, TouchableWithoutFeedback, StatusBar, Animated, Image, Text, View, Platform } from "react-native";
+import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
 import PropTypes from "prop-types";
 
 import FlashMessageManager from "./FlashMessageManager";
@@ -11,7 +11,7 @@ import FlashMessageWrapper, { styleWithInset } from "./FlashMessageWrapper";
 /**
  * MessageComponent `minHeight` property used mainly in vertical transitions
  */
-const OFFSET_HEIGHT = 48;
+const OFFSET_HEIGHT = Platform.OS !== "ios" ? 60 : isIphoneX() ? 90 : 90 - getStatusBarHeight();
 
 /**
  * `message` prop it's expected to be some "object"
