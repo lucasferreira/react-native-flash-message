@@ -34,7 +34,8 @@
     "react-native": "*"
   },
   "dependencies": {
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.7.2",
+    "react-native-iphone-x-helper": "^1.2.0"
   },
   "devDependencies": {
     "prettier": "^1.16.4",
