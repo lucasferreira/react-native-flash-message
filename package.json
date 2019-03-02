@@ -34,11 +34,11 @@
     "react-native": "*"
   },
   "dependencies": {
-    "prop-types": "^15.6.2"
+    "prop-types": "^15.7.2"
   },
   "devDependencies": {
-    "prettier": "^1.14.3",
-    "react": "^16.2.0",
-    "react-native": "^0.54.0"
+    "prettier": "^1.16.4",
+    "react": "16.5.0",
+    "react-native": "^0.57.1"
   }
 }

@@ -4,18 +4,22 @@
 
 const fs = require("fs");
 const path = require("path");
-const blacklist = require("metro/src/blacklist");
+const blacklist = require("metro-config/src/defaults/blacklist");
 
 module.exports = {
-  getBlacklistRE() {
-    return blacklist([
-      /react\-native\-flash\-message\/examples\/(?!FlashMessagePlayground).*/,
-      /react\-native\-flash\-message\/node_modules\/react-native\/(.*)/,
-      /react\-native\-flash\-message\/node_modules\/react\/(.*)/,
-    ]);
+  resolver: {
+    blacklistRE: getBlacklistRE(),
+    extraNodeModules: getNodeModulesForDirectory(path.resolve(".")),
   },
-  extraNodeModules: getNodeModulesForDirectory(path.resolve(".")),
 };
+
+function getBlacklistRE() {
+  return blacklist([
+    /react\-native\-flash\-message\/examples\/(?!FlashMessagePlayground).*/,
+    /react\-native\-flash\-message\/node_modules\/react-native\/(.*)/,
+    /react\-native\-flash\-message\/node_modules\/react\/(.*)/,
+  ]);
+}
 
 function getNodeModulesForDirectory(rootPath) {
   const nodeModulePath = path.join(rootPath, "node_modules");

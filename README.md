@@ -39,7 +39,7 @@ You can try out the [Flash Message Playground app](https://exp.host/@lucasferrei
 
 The _FlashMessage component_ it's build to a global use, so you have to instance this component once in your main app screen always as a last inserted component:
 
-```javascript
+```jsx
 import React from "react";
 import { View } from "react-native";
 import FlashMessage from "react-native-flash-message";
@@ -63,7 +63,7 @@ After that you only need to call `showMessage` or `hideMessage` methods from any
 
 If you don't need a global use for _(e.g. will use only in one screen)_ you can instance your _FlashMessage Component_ with a ref ID _(or other capture ref method)_:
 
-```javascript
+```jsx
 <View style={{ flex: 1 }}>
   <YourMainApp />
   <FlashMessage ref="myLocalFlashMessage" />   {/* <--- here as last component always with `ref` */}
@@ -74,7 +74,7 @@ If you don't need a global use for _(e.g. will use only in one screen)_ you can 
 
 Now that you already instantiated the global _FlashMessage component_, when you need to show some message in your app you could use the `showMessage` method in any screen or view. This is a global method that receive a _message object_ with your message detail:
 
-```javascript
+```jsx
 import React from "react";
 import { View, Button } from "react-native";
 
