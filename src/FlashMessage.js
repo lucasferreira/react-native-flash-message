@@ -1,8 +1,8 @@
 "use strict";
 
 import React, { Component } from "react";
-import { StyleSheet, TouchableWithoutFeedback, StatusBar, Animated, Image, Text, View } from "react-native";
-
+import { StyleSheet, TouchableWithoutFeedback, Platform, StatusBar, Animated, Image, Text, View } from "react-native";
+import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
 import PropTypes from "prop-types";
 
 import FlashMessageManager from "./FlashMessageManager";
@@ -11,7 +11,7 @@ import FlashMessageWrapper, { styleWithInset } from "./FlashMessageWrapper";
 /**
  * MessageComponent `minHeight` property used mainly in vertical transitions
  */
-const OFFSET_HEIGHT = 48;
+const OFFSET_HEIGHT = Platform.OS !== "ios" ? 60 : 48;
 
 /**
  * `message` prop it's expected to be some "object"
@@ -176,10 +176,10 @@ export const DefaultFlash = ({
   titleStyle,
   renderFlashMessageIcon,
   position = "top",
-  floating = false,
+  statusBarIsTranslucent = false,
+  floating = false,   
   icon,
   hideStatusBar = false,
-  isTranslucentOnAndroid = false,
   ...props
 }) => {
   const hasDescription = !!message.description && message.description !== "";
@@ -194,7 +194,7 @@ export const DefaultFlash = ({
   const hasIcon = !!iconView;
 
   return (
-    <FlashMessageWrapper isTranslucentOnAndroid={isTranslucentOnAndroid} position={typeof position === "string" ? position : null}>
+    <FlashMessageWrapper position={typeof position === "string" ? position : null} statusBarIsTranslucent={statusBarIsTranslucent}>
       {wrapperInset => (
         <View
           style={styleWithInset(
@@ -243,7 +243,6 @@ export const DefaultFlash = ({
 DefaultFlash.propTypes = {
   message: MessagePropType,
   renderFlashMessageIcon: PropTypes.func,
-  isTranslucentOnAndroid: PropTypes.bool,
 };
 
 /**
@@ -320,11 +319,6 @@ export default class FlashMessage extends Component {
      * The `MessageComponent` prop set the default flash message render component used to show all the messages
      */
     MessageComponent: DefaultFlash,
-    /**
-     * The `isTranslucentOnAndroid` prop set when set, will apply padding to the message equal to the status bar height when rendering on android
-     * Use this when you have a transparent status bar
-     */
-    isTranslucentOnAndroid: false,
   };
   static propTypes = {
     canRegisterAsDefault: PropTypes.bool,
@@ -343,7 +337,6 @@ export default class FlashMessage extends Component {
     renderFlashMessageIcon: PropTypes.func,
     transitionConfig: PropTypes.func,
     MessageComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-    isTranslucentOnAndroid: PropTypes.bool,
   };
   /**
    * Your can customize the default ColorTheme of this component
@@ -527,7 +520,7 @@ export default class FlashMessage extends Component {
     this.toggleVisibility(false, animated);
   }
   render() {
-    const { renderFlashMessageIcon, MessageComponent, isTranslucentOnAndroid } = this.props;
+    const { renderFlashMessageIcon, MessageComponent } = this.props;
     const { message, visibleValue } = this.state;
 
     const style = this.prop(message, "style");
@@ -538,6 +531,8 @@ export default class FlashMessage extends Component {
     const icon = parseIcon(this.prop(message, "icon"));
     const hideStatusBar = this.prop(message, "hideStatusBar");
     const transitionConfig = this.prop(message, "transitionConfig");
+    const statusBarIsTranslucent = this.prop(message, "statusBarIsTranslucent");
+
     const animated = this.isAnimated(message);
     const animStyle = animated ? transitionConfig(visibleValue, position) : {};
 
@@ -555,12 +550,12 @@ export default class FlashMessage extends Component {
               floating={floating}
               message={message}
               hideStatusBar={hideStatusBar}
+              statusBarIsTranslucent={statusBarIsTranslucent}
               renderFlashMessageIcon={renderFlashMessageIcon}
               icon={icon}
               style={style}
               textStyle={textStyle}
               titleStyle={titleStyle}
-              isTranslucentOnAndroid={isTranslucentOnAndroid}
             />
           </TouchableWithoutFeedback>
         )}

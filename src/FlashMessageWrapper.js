@@ -2,29 +2,22 @@
 
 import React, { Component } from "react";
 import { Dimensions, Platform, StyleSheet, StatusBar } from "react-native";
-
+import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
 import PropTypes from "prop-types";
 
 /**
  * DETECTION AND DIMENSIONS CODE FROM:
  * https://github.com/react-community/react-native-safe-area-view
  */
-
-const X_WIDTH = 375; // iPhone X
-const X_HEIGHT = 812; // iPhone X
+    
 const PAD_WIDTH = 768; // iPad
 const PAD_HEIGHT = 1024; // iPad
 
 const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get("window");
 
-const isIPhoneX = (() => {
-  if (Platform.OS === "web") return false;
+const isAndroid = Platform.OS === "android";
 
-  return (
-    Platform.OS === "ios" &&
-    ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) || (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
-  );
-})();
+const isIPhoneX = isIphoneX();
 
 const isIPad = (() => {
   if (Platform.OS !== "ios" || isIPhoneX) return false;
@@ -45,7 +38,7 @@ const isIPad = (() => {
 const isOrientationLandscape = ({ width, height }) => width > height;
 
 let _customStatusBarHeight = null;
-const statusBarHeight = (isLandscape = false, isTranslucentOnAndroid = false) => {
+const statusBarHeight = (isLandscape = false, statusBarIsTranslucent = false) => {
   if (_customStatusBarHeight !== null) {
     return _customStatusBarHeight;
   }
@@ -56,19 +49,18 @@ const statusBarHeight = (isLandscape = false, isTranslucentOnAndroid = false) =>
    * factor in the height here; if translucent (content renders under it) then
    * we do.
    */
-  if (Platform.OS === "android") {
-    if(isTranslucentOnAndroid === true) {
+  if (isAndroid) {
+    if (global.Expo) {
+      return global.Expo.Constants.statusBarHeight + 6;
+    } else if (statusBarIsTranslucent) {
       return StatusBar.currentHeight;
-    //we keep this logic branch to maintain backwards compatability with people on expo who rely on this behavior
-    } else if(global.Expo) {
-      return global.Expo.Constants.statusBarHeight;
     } else {
-      return 0;
+      return 6;
     }
   }
 
   if (isIPhoneX) {
-    return isLandscape ? 0 : 44;
+    return isLandscape ? 0 : getStatusBarHeight(true);
   }
 
   if (isIPad) {
@@ -188,16 +180,12 @@ export default class FlashMessageWrapper extends Component {
      * Other options like "bottom" and "center" uses other extra padding configurations
      */
     position: "top",
-
-    /**
-    * when isTranslucentOnAndroid is true, will set the padding to status bar height to prevent content rendering under status bar
-    */
-    isTranslucentOnAndroid: false,
+    isTranslucent: false,
   };
   static propTypes = {
     position: PropTypes.string,
     children: PropTypes.func.isRequired,
-    isTranslucentOnAndroid: PropTypes.bool,
+    isTranslucent: PropTypes.bool,
   };
   static setStatusBarHeight = height => {
     _customStatusBarHeight = height;
@@ -221,10 +209,10 @@ export default class FlashMessageWrapper extends Component {
     this.setState({ isLandscape });
   }
   render() {
-    const { position, children, isTranslucentOnAndroid } = this.props;
+    const { position, children, statusBarIsTranslucent } = this.props;
     const { isLandscape } = this.state;
 
-    const _statusBarHeight = statusBarHeight(isLandscape, isTranslucentOnAndroid);
+    const _statusBarHeight = statusBarHeight(isLandscape, statusBarIsTranslucent);
 
     /**
      * This wrapper will return data about extra inset padding, statusBarHeight and some device detection like iPhoneX and iPad
@@ -237,7 +225,7 @@ export default class FlashMessageWrapper extends Component {
       insetTop: position === "top" ? _statusBarHeight : 0,
       insetLeft: (position === "top" || position === "bottom") && isLandscape ? (isIPhoneX ? 21 : 0) : 0,
       insetRight: (position === "top" || position === "bottom") && isLandscape ? (isIPhoneX ? 21 : 0) : 0,
-      insetBottom: isIPhoneX && position === "bottom" ? (isLandscape ? 24 : 34) : 0,
+      insetBottom: isIPhoneX && position === "bottom" ? (isLandscape ? 24 : 34) : isAndroid ? 2 : 0,
     };
 
     return children(wrapper);

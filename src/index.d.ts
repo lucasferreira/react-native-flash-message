@@ -44,7 +44,7 @@ interface MessageOptions {
   description?: string;
   duration?: number;
   floating?: boolean;
-  hideOnPress?: number;
+  hideOnPress?: boolean;
   hideStatusBar?: boolean;
   icon?: Icon;
   message: string;
