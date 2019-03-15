@@ -176,7 +176,8 @@ export const DefaultFlash = ({
   titleStyle,
   renderFlashMessageIcon,
   position = "top",
-  floating = false,
+  statusBarIsTranslucent = false,
+  floating = false,   
   icon,
   hideStatusBar = false,
   ...props
@@ -193,7 +194,7 @@ export const DefaultFlash = ({
   const hasIcon = !!iconView;
 
   return (
-    <FlashMessageWrapper position={typeof position === "string" ? position : null}>
+    <FlashMessageWrapper position={typeof position === "string" ? position : null} statusBarIsTranslucent={statusBarIsTranslucent}>
       {wrapperInset => (
         <View
           style={styleWithInset(
@@ -530,6 +531,8 @@ export default class FlashMessage extends Component {
     const icon = parseIcon(this.prop(message, "icon"));
     const hideStatusBar = this.prop(message, "hideStatusBar");
     const transitionConfig = this.prop(message, "transitionConfig");
+    const statusBarIsTranslucent = this.prop(message, "statusBarIsTranslucent");
+
     const animated = this.isAnimated(message);
     const animStyle = animated ? transitionConfig(visibleValue, position) : {};
 
@@ -547,6 +550,7 @@ export default class FlashMessage extends Component {
               floating={floating}
               message={message}
               hideStatusBar={hideStatusBar}
+              statusBarIsTranslucent={statusBarIsTranslucent}
               renderFlashMessageIcon={renderFlashMessageIcon}
               icon={icon}
               style={style}

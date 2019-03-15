@@ -1,7 +1,7 @@
 "use strict";
 
 import React, { Component } from "react";
-import { Dimensions, Platform, StyleSheet } from "react-native";
+import { Dimensions, Platform, StyleSheet, StatusBar } from "react-native";
 import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
 import PropTypes from "prop-types";
 
@@ -38,7 +38,7 @@ const isIPad = (() => {
 const isOrientationLandscape = ({ width, height }) => width > height;
 
 let _customStatusBarHeight = null;
-const statusBarHeight = (isLandscape = false) => {
+const statusBarHeight = (isLandscape = false, statusBarIsTranslucent = false) => {
   if (_customStatusBarHeight !== null) {
     return _customStatusBarHeight;
   }
@@ -52,6 +52,8 @@ const statusBarHeight = (isLandscape = false) => {
   if (isAndroid) {
     if (global.Expo) {
       return global.Expo.Constants.statusBarHeight + 6;
+    } else if (statusBarIsTranslucent) {
+      return StatusBar.currentHeight;
     } else {
       return 6;
     }
@@ -178,10 +180,12 @@ export default class FlashMessageWrapper extends Component {
      * Other options like "bottom" and "center" uses other extra padding configurations
      */
     position: "top",
+    isTranslucent: false,
   };
   static propTypes = {
     position: PropTypes.string,
     children: PropTypes.func.isRequired,
+    isTranslucent: PropTypes.bool,
   };
   static setStatusBarHeight = height => {
     _customStatusBarHeight = height;
@@ -205,10 +209,10 @@ export default class FlashMessageWrapper extends Component {
     this.setState({ isLandscape });
   }
   render() {
-    const { position, children } = this.props;
+    const { position, children, statusBarIsTranslucent } = this.props;
     const { isLandscape } = this.state;
 
-    const _statusBarHeight = statusBarHeight(isLandscape);
+    const _statusBarHeight = statusBarHeight(isLandscape, statusBarIsTranslucent);
 
     /**
      * This wrapper will return data about extra inset padding, statusBarHeight and some device detection like iPhoneX and iPad
