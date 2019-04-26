@@ -65,6 +65,8 @@ interface FlashMessageProps extends Partial<MessageOptions> {
   ): React.ReactElement<{}> | null;
 }
 
+export class DefaultFlash extends React.Component<MessageComponentProps> {}
+
 export function showMessage(options: MessageOptions): void;
 export function hideMessage(): void;
 export function positionStyle(style: StyleProp<ViewStyle>, position: Position): StyleProp<ViewStyle>;
