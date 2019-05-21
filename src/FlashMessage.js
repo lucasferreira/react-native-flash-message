@@ -174,6 +174,7 @@ export const DefaultFlash = ({
   titleStyle,
   renderFlashMessageIcon,
   position = "top",
+  renderCustomContent,
   floating = false,
   icon,
   hideStatusBar = false,
@@ -224,6 +225,7 @@ export const DefaultFlash = ({
               ]}>
               {message.message}
             </Text>
+            {!!renderCustomContent && renderCustomContent()}
             {hasDescription && (
               <Text style={[styles.flashText, !!message.color && { color: message.color }, textStyle]}>
                 {message.description}
@@ -300,6 +302,11 @@ export default class FlashMessage extends Component {
      */
     position: "top",
     /**
+     * The `render` prop will render JSX below the title of a flash message
+     * Expects a function that returns JSX
+     */
+    renderCustomContent: null,
+    /**
      * The `icon` prop set the graphical icon of a flash message
      * Expected options: "none" (default), "auto" (guided by `type`), "success", "info", "warning", "danger" or a custom object with icon type/name and position (left or right) attributes, e.g.: { icon: "success", position: "right" }
      */
@@ -330,6 +337,7 @@ export default class FlashMessage extends Component {
     hideStatusBar: PropTypes.bool,
     floating: PropTypes.bool,
     position: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
+    renderCustomContent: PropTypes.func,
     icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     renderFlashMessageIcon: PropTypes.func,
     transitionConfig: PropTypes.func,
@@ -517,7 +525,7 @@ export default class FlashMessage extends Component {
     this.toggleVisibility(false, animated);
   }
   render() {
-    const { renderFlashMessageIcon, MessageComponent } = this.props;
+    const { renderFlashMessageIcon, renderCustomContent, MessageComponent } = this.props;
     const { message, visibleValue } = this.state;
 
     const style = this.prop(message, "style");
@@ -546,6 +554,7 @@ export default class FlashMessage extends Component {
               message={message}
               hideStatusBar={hideStatusBar}
               renderFlashMessageIcon={renderFlashMessageIcon}
+              renderCustomContent={renderCustomContent}
               icon={icon}
               style={style}
               textStyle={textStyle}
