@@ -176,7 +176,7 @@ export const DefaultFlash = ({
   position = "top",
   statusBarIsTranslucent = false,
   renderCustomContent,
-  floating = false,   
+  floating = false,
   icon,
   hideStatusBar = false,
   ...props
