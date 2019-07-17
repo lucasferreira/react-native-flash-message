@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Non-public global class to handle the "default" FlashMessage instance to global use
  */

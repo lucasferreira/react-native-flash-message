@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "FlashMessagePlayground",
+    "name": "Flash Message Playground",
     "description": "Use this playground app to try out react-native-flash-message versatile uses",
     "version": "1.1.0",
     "slug": "FlashMessagePlayground",
@@ -14,6 +14,7 @@
     "entryPoint": "./node_modules/expo/AppEntry.js",
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "githubUrl": "https://github.com/lucasferreira/react-native-flash-message/tree/master/examples/FlashMessagePlayground"
   }
 }

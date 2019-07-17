@@ -55,7 +55,8 @@ interface MessageOptions {
 
 interface FlashMessageProps extends Partial<MessageOptions> {
   canRegisterAsDefault?: boolean;
-  MessageComponent?: React.ReactElement<MessageComponentProps>;
+  style?: StyleProp<ViewStyle>;
+  MessageComponent?: React.SFC<MessageComponentProps> | React.ReactElement<MessageComponentProps>;
   transitionConfig?(animValue: Animated.Value, position: Position): Transition;
   renderFlashMessageIcon?(
     icon: Icon,
@@ -64,9 +65,20 @@ interface FlashMessageProps extends Partial<MessageOptions> {
   ): React.ReactElement<{}> | null;
 }
 
+export class DefaultFlash extends React.Component<MessageComponentProps> {}
+
 export function showMessage(options: MessageOptions): void;
 export function hideMessage(): void;
 export function positionStyle(style: StyleProp<ViewStyle>, position: Position): StyleProp<ViewStyle>;
 
 export function FlashMessageTransition(animValue: Animated.Value, position: Position): Transition;
-export default class FlashMessage extends React.Component<FlashMessageProps> {}
+export default class FlashMessage extends React.Component<FlashMessageProps> {
+  static setColorTheme(theme: ColorTheme): void;
+}
+
+export interface ColorTheme {
+  success?: string;
+  info?: string;
+  warning?: string;
+  danger?: string;
+}

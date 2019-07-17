@@ -1,12 +1,16 @@
-"use strict";
-
 import FlashMessageManager from "./FlashMessageManager";
 import FlashMessageWrapper, { styleWithInset } from "./FlashMessageWrapper";
-import FlashMessage, { positionStyle, showMessage, hideMessage, FlashMessageTransition } from "./FlashMessage";
+import FlashMessage, {
+  DefaultFlash,
+  positionStyle,
+  showMessage,
+  hideMessage,
+  FlashMessageTransition,
+} from "./FlashMessage";
 
 export {
   FlashMessageManager,
-  FlashMessageWrapper,
+  DefaultFlash,
   styleWithInset,
   positionStyle,
   showMessage,

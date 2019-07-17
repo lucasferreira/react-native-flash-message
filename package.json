@@ -1,6 +1,6 @@
 {
   "name": "react-native-flash-message",
-  "version": "0.1.11",
+  "version": "0.1.13",
   "description": "React Native flashbar and top notification alert utility",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -38,7 +38,7 @@
     "react-native-iphone-x-helper": "^1.2.0"
   },
   "devDependencies": {
-    "prettier": "^1.16.4",
+    "prettier": "^1.17.0",
     "react": "16.5.0",
     "react-native": "^0.57.1"
   }
