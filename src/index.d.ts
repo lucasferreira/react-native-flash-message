@@ -49,6 +49,8 @@ interface MessageOptions {
   icon?: Icon;
   message: string;
   position?: Position;
+  textStyle?: StyleProp<TextStyle>;
+  titleStyle?: StyleProp<TextStyle>;
   type?: MessageType;
   onPress?(): void;
 }
