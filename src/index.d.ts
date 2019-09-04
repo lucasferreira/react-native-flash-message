@@ -19,11 +19,19 @@ type Transition =
   | { opacity: number }
   | {};
 
-interface MessageComponentProps {
-  position: Position;
-  floating: boolean;
+interface Message {
   message: string;
-  hideStatusBar: boolean;
+  description?: string;
+  type?: string;
+  backgroundColor?: string;
+  color?: string;
+}
+
+interface MessageComponentProps {
+  position?: Position;
+  floating?: boolean;
+  message: Message;
+  hideStatusBar?: boolean;
   icon: Icon;
   style: StyleProp<ViewStyle>;
   textStyle: StyleProp<TextStyle>;
@@ -47,8 +55,10 @@ interface MessageOptions {
   hideOnPress?: boolean;
   hideStatusBar?: boolean;
   icon?: Icon;
-  message: string;
+  message: Message;
   position?: Position;
+  textStyle?: StyleProp<TextStyle>;
+  titleStyle?: StyleProp<TextStyle>;
   type?: MessageType;
   onPress?(): void;
 }
