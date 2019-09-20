@@ -61,6 +61,7 @@ interface MessageOptions {
   titleStyle?: StyleProp<TextStyle>;
   type?: MessageType;
   onPress?(): void;
+  onLongPress?(): void;
 }
 
 interface FlashMessageProps extends Partial<MessageOptions> {

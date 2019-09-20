@@ -419,7 +419,7 @@ export default class FlashMessage extends Component {
   /**
    * Non-public method
    */
-	longPressMessage(event) {
+  longPressMessage(event) {
     if (!this.state.isHidding) {
       const { message } = this.state;
       const hideOnPress = this.prop(message, "hideOnPress");
@@ -571,7 +571,7 @@ export default class FlashMessage extends Component {
           animStyle,
         ]}>
         {!!message && (
-          <TouchableWithoutFeedback onLongPress={this.longPressMessage} onPress={this.pressMessage}>
+          <TouchableWithoutFeedback onPress={this.pressMessage} onLongPress={this.longPressMessage}>
             <MessageComponent
               position={position}
               floating={floating}
