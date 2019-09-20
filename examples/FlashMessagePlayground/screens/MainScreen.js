@@ -22,13 +22,19 @@ export default class MainScreen extends React.Component {
 
     showMessage(message);
   }
-  messageWithPosition(position = "top") {
-    const message = {
+  messageWithPosition(position = "top", hasDescription = true, extra = {}) {
+    let message = {
       message: "Some message title",
-      description: "Lorem ipsum dolar sit amet",
       type: "info",
       position,
+      ...extra,
     };
+
+    if (hasDescription) {
+      message = { ...message, description: "Lorem ipsum dolar sit amet" };
+    } else {
+      message = { ...message, floating: true };
+    }
 
     showMessage(message);
   }
@@ -105,6 +111,11 @@ export default class MainScreen extends React.Component {
                 style={styles.demoButton}
                 label="Message Bottom"
                 onPress={() => this.messageWithPosition("bottom")}
+              />
+              <DemoButton
+                style={styles.demoButton}
+                label="Message Bottom (Floating)"
+                onPress={() => this.messageWithPosition("bottom", false)}
               />
               <DemoButton
                 style={styles.demoButton}

@@ -607,7 +607,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 12,
     marginRight: 12,
+    marginBottom: 10,
     borderRadius: 8,
+    minHeight: OFFSET_HEIGHT - getStatusBarHeight(),
   },
   defaultFlashWithIcon: {
     flexDirection: "row",

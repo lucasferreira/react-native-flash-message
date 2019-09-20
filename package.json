@@ -4,6 +4,9 @@
   "description": "React Native flashbar and top notification alert utility",
   "main": "src/index.js",
   "types": "src/index.d.ts",
+  "scripts": {
+    "upd": "yarn upgrade-interactive --latest"
+  },
   "repository": "https://github.com/lucasferreira/react-native-flash-message.git",
   "keywords": [
     "react",
@@ -35,11 +38,11 @@
   },
   "dependencies": {
     "prop-types": "^15.7.2",
-    "react-native-iphone-x-helper": "^1.2.0"
+    "react-native-iphone-x-helper": "^1.2.1"
   },
   "devDependencies": {
-    "prettier": "^1.17.0",
-    "react": "16.5.0",
-    "react-native": "^0.57.1"
+    "prettier": "^1.18.2",
+    "react": "16.8.3",
+    "react-native": "0.59.8"
   }
 }

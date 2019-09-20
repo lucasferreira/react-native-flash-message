@@ -2,7 +2,7 @@
   "expo": {
     "name": "Flash Message Playground",
     "description": "Use this playground app to try out react-native-flash-message versatile uses",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "slug": "FlashMessagePlayground",
     "privacy": "public",
     "primaryColor": "#393939",
@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/icons/splash.png"
     },
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "35.0.0",
     "entryPoint": "./node_modules/expo/AppEntry.js",
     "ios": {
       "supportsTablet": true

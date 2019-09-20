@@ -1,6 +1,6 @@
 {
   "name": "FlashMessagePlayground",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "main": "./node_modules/expo/AppEntry.js",
   "scripts": {
@@ -15,11 +15,11 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "expo": "^32.0.6",
-    "react": "16.5.0",
-    "react-native": "^0.57.1",
+    "expo": "^35.0.0",
+    "react": "16.8.3",
+    "react-native": "0.59.8",
     "react-native-flash-message": "link:../..",
-    "react-native-iphone-x-helper": "^1.2.0",
+    "react-native-iphone-x-helper": "^1.2.1",
     "react-navigation": "^1.5.0"
   },
   "devDependencies": {
