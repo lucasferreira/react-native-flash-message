@@ -55,7 +55,7 @@ interface MessageOptions {
   hideOnPress?: boolean;
   hideStatusBar?: boolean;
   icon?: Icon;
-  message: Message;
+  message: string;
   position?: Position;
   textStyle?: StyleProp<TextStyle>;
   titleStyle?: StyleProp<TextStyle>;
