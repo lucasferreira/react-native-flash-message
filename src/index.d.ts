@@ -1,17 +1,17 @@
 import * as React from "react";
 import { Animated, ImageProps, ImageStyle, StyleProp, TextStyle, TranslateYTransform, ViewStyle } from "react-native";
 
-type Position = "top" | "bottom" | "center";
-type MessageType = "none" | "default" | "info" | "success" | "danger" | "warning";
+export type Position = "top" | "bottom" | "center";
+export type MessageType = "none" | "default" | "info" | "success" | "danger" | "warning";
 
-type Icon =
+export type Icon =
   | MessageType
   | {
       icon: MessageType;
       position: Position;
     };
 
-type Transition =
+export type Transition =
   | {
       transform: TranslateYTransform[];
       opacity: number;
@@ -19,7 +19,7 @@ type Transition =
   | { opacity: number }
   | {};
 
-interface Message {
+export interface Message {
   message: string;
   description?: string;
   type?: string;
@@ -27,7 +27,7 @@ interface Message {
   color?: string;
 }
 
-interface MessageComponentProps {
+export interface MessageComponentProps {
   position?: Position;
   floating?: boolean;
   message: Message;
@@ -43,7 +43,7 @@ interface MessageComponentProps {
   ): React.ReactElement<{}> | null;
 }
 
-interface MessageOptions {
+export interface MessageOptions {
   animated?: boolean;
   animationDuration?: number;
   backgroundColor?: string;
@@ -64,7 +64,7 @@ interface MessageOptions {
   onLongPress?(): void;
 }
 
-interface FlashMessageProps extends Partial<MessageOptions> {
+export interface FlashMessageProps extends Partial<MessageOptions> {
   canRegisterAsDefault?: boolean;
   style?: StyleProp<ViewStyle>;
   MessageComponent?: React.SFC<MessageComponentProps> | React.ReactElement<MessageComponentProps>;
