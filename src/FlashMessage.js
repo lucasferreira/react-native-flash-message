@@ -222,17 +222,19 @@ export const DefaultFlash = ({
             position !== "center" && floating ? "margin" : "padding"
           )}
           {...props}>
-          {hasIcon && icon.position === "left" && iconView}
           <View style={styles.flashLabel}>
-            <Text
-              style={[
-                styles.flashText,
-                hasDescription && styles.flashTitle,
-                !!message.color && { color: message.color },
-                titleStyle,
-              ]}>
-              {message.message}
-            </Text>
+            <View style={styles.topRow}>
+              {hasIcon && icon.position === "left" && iconView}
+              <Text
+                style={[
+                  styles.flashText,
+                  hasDescription && styles.flashTitle,
+                  !!message.color && { color: message.color },
+                  titleStyle,
+                ]}>
+                {message.message}
+              </Text>
+            </View>
             {!!renderCustomContent && renderCustomContent(message)}
             {hasDescription && (
               <Text style={[styles.flashText, !!message.color && { color: message.color }, textStyle]}>
@@ -602,6 +604,10 @@ export default class FlashMessage extends Component {
 }
 
 const styles = StyleSheet.create({
+  topRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   root: {
     position: "absolute",
     left: 0,
