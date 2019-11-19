@@ -74,6 +74,7 @@ export interface FlashMessageProps extends Partial<MessageOptions> {
     style: StyleProp<ImageStyle>,
     customProps: Partial<ImageProps>
   ): React.ReactElement<{}> | null;
+  renderCustomContent?(message: MessageOptions): React.ReactElement<{}> | null;
 }
 
 export class DefaultFlash extends React.Component<MessageComponentProps> {}
