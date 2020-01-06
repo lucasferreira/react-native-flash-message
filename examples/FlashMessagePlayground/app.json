@@ -15,6 +15,10 @@
     "ios": {
       "supportsTablet": true
     },
-    "githubUrl": "https://github.com/lucasferreira/react-native-flash-message/tree/master/examples/FlashMessagePlayground"
+    "githubUrl": "https://github.com/lucasferreira/react-native-flash-message/tree/master/examples/FlashMessagePlayground",
+    "platforms": [
+      "android",
+      "ios"
+    ]
   }
 }
