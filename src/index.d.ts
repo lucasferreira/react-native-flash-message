@@ -2,12 +2,21 @@ import * as React from "react";
 import { Animated, ImageProps, ImageStyle, StyleProp, TextStyle, TranslateYTransform, ViewStyle } from "react-native";
 
 export type Position = "top" | "bottom" | "center";
-export type MessageType = "none" | "default" | "info" | "success" | "danger" | "warning";
 
-export type Icon =
-  | MessageType
+type Color = "info" | "success" | "danger" | "warning";
+
+export type MessageType = "default" | Color;
+
+export type IconType = "none" | "auto" | Color;
+
+export type ColorTheme = {
+  [k in Color]?: string
+}
+
+export type Icon<T = IconType> =
+  | T
   | {
-      icon: MessageType;
+      icon: T;
       position: Position;
     };
 
@@ -22,28 +31,28 @@ export type Transition =
 export interface Message {
   message: string;
   description?: string;
-  type?: string;
+  type?: MessageType;
   backgroundColor?: string;
   color?: string;
 }
 
-export interface MessageComponentProps {
+export interface MessageComponentProps<T = IconType> {
   position?: Position;
   floating?: boolean;
   message: Message;
   hideStatusBar?: boolean;
-  icon: Icon;
+  icon: Icon<T>;
   style: StyleProp<ViewStyle>;
   textStyle: StyleProp<TextStyle>;
   titleStyle: StyleProp<TextStyle>;
   renderFlashMessageIcon?(
-    icon: Icon,
+    icon: Icon<T>,
     style: StyleProp<ImageStyle>,
     customProps: Partial<ImageProps>
   ): React.ReactElement<{}> | null;
 }
 
-export interface MessageOptions {
+export interface MessageOptions<T = IconType> {
   animated?: boolean;
   animationDuration?: number;
   backgroundColor?: string;
@@ -54,7 +63,7 @@ export interface MessageOptions {
   floating?: boolean;
   hideOnPress?: boolean;
   hideStatusBar?: boolean;
-  icon?: Icon;
+  icon?: Icon<T>;
   message: string;
   position?: Position;
   textStyle?: StyleProp<TextStyle>;
@@ -64,13 +73,13 @@ export interface MessageOptions {
   onLongPress?(): void;
 }
 
-export interface FlashMessageProps extends Partial<MessageOptions> {
+export interface FlashMessageProps<T = IconType> extends Partial<MessageOptions<T>> {
   canRegisterAsDefault?: boolean;
   style?: StyleProp<ViewStyle>;
   MessageComponent?: React.SFC<MessageComponentProps> | React.ReactElement<MessageComponentProps>;
   transitionConfig?(animValue: Animated.Value, position: Position): Transition;
   renderFlashMessageIcon?(
-    icon: Icon,
+    icon: Icon<T>,
     style: StyleProp<ImageStyle>,
     customProps: Partial<ImageProps>
   ): React.ReactElement<{}> | null;
@@ -78,18 +87,11 @@ export interface FlashMessageProps extends Partial<MessageOptions> {
 
 export class DefaultFlash extends React.Component<MessageComponentProps> {}
 
-export function showMessage(options: MessageOptions): void;
+export function showMessage<T = IconType>(options: MessageOptions<T>): void;
 export function hideMessage(): void;
 export function positionStyle(style: StyleProp<ViewStyle>, position: Position): StyleProp<ViewStyle>;
 
 export function FlashMessageTransition(animValue: Animated.Value, position: Position): Transition;
 export default class FlashMessage extends React.Component<FlashMessageProps> {
   static setColorTheme(theme: ColorTheme): void;
-}
-
-export interface ColorTheme {
-  success?: string;
-  info?: string;
-  warning?: string;
-  danger?: string;
 }
