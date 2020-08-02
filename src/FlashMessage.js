@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, TouchableWithoutFeedback, Platform, StatusBar, Animated, Image, Text, View } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, Platform, StatusBar, Animated, Image, Text, View, Dimensions } from "react-native";
 import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
 import PropTypes from "prop-types";
 
@@ -108,30 +108,34 @@ export function hideMessage(...args) {
  * Default transition config for FlashMessage component
  * You can create your own transition config with interpolation, just remember to return some style object with transform options
  */
-export function FlashMessageTransition(animValue, position = "top") {
+export function FlashMessageTransition(animValue, position = "top", direction = "vertical") {
   const opacity = animValue.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 1],
   });
+  const {width} = Dimensions.get('window');
+  const transitionLength = direction === "horizontal" ? width : OFFSET_HEIGHT;
 
   if (position === "top") {
-    const translateY = animValue.interpolate({
+    const translation = animValue.interpolate({
       inputRange: [0, 1],
-      outputRange: [-OFFSET_HEIGHT, 0],
+      outputRange: [-transitionLength, 0],
     });
 
+    const transform = direction === "horizontal" ? {translateX: translation} :{translateY: translation};
+
     return {
-      transform: [{ translateY }],
+      transform: [transform],
       opacity,
     };
   } else if (position === "bottom") {
-    const translateY = animValue.interpolate({
+    const translation = animValue.interpolate({
       inputRange: [0, 1],
-      outputRange: [OFFSET_HEIGHT, 0],
+      outputRange: [transitionLength, 0],
     });
-
+    const transform = direction === "horizontal" ? {translateX: translation} :{translateY: translation};
     return {
-      transform: [{ translateY }],
+      transform: [transform ],
       opacity,
     };
   }
@@ -306,6 +310,11 @@ export default class FlashMessage extends Component {
      */
     position: "top",
     /**
+     * The `direction` prop set the direction of a flash message
+     * Expected options: "vertical" (default), "horizontal"
+     */
+    direction: "vertical",
+    /**
      * The `render` prop will render JSX below the title of a flash message
      * Expects a function that returns JSX
      */
@@ -347,6 +356,7 @@ export default class FlashMessage extends Component {
     renderFlashMessageIcon: PropTypes.func,
     transitionConfig: PropTypes.func,
     MessageComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+    direction: PropTypes.string,
   };
   /**
    * Your can customize the default ColorTheme of this component
@@ -560,8 +570,9 @@ export default class FlashMessage extends Component {
     const icon = parseIcon(this.prop(message, "icon"));
     const hideStatusBar = this.prop(message, "hideStatusBar");
     const transitionConfig = this.prop(message, "transitionConfig");
+    const direction = this.prop(message, "direction");
     const animated = this.isAnimated(message);
-    const animStyle = animated ? transitionConfig(visibleValue, position) : {};
+    const animStyle = animated ? transitionConfig(visibleValue, position, direction) : {};
 
     return (
       <Animated.View
