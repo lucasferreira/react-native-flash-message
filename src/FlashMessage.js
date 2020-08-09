@@ -172,6 +172,7 @@ export const DefaultFlash = ({
   style,
   textStyle,
   titleStyle,
+  titleProps,
   renderFlashMessageIcon,
   position = "top",
   renderCustomContent,
@@ -222,7 +223,8 @@ export const DefaultFlash = ({
                 hasDescription && styles.flashTitle,
                 !!message.color && { color: message.color },
                 titleStyle,
-              ]}>
+              ]}
+              {...titleProps}>
               {message.message}
             </Text>
             {!!renderCustomContent && renderCustomContent(message)}
@@ -555,6 +557,7 @@ export default class FlashMessage extends Component {
     const style = this.prop(message, "style");
     const textStyle = this.prop(message, "textStyle");
     const titleStyle = this.prop(message, "titleStyle");
+    const titleProps = this.prop(message, "titleProps");
     const floating = this.prop(message, "floating");
     const position = this.prop(message, "position");
     const icon = parseIcon(this.prop(message, "icon"));
@@ -583,6 +586,7 @@ export default class FlashMessage extends Component {
               style={style}
               textStyle={textStyle}
               titleStyle={titleStyle}
+              titleProps={titleProps}
             />
           </TouchableWithoutFeedback>
         )}
