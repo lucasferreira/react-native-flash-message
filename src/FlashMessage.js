@@ -598,6 +598,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
+    zIndex: 99,
   },
   rootTop: {
     top: 0,
