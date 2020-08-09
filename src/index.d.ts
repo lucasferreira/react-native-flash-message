@@ -86,6 +86,8 @@ export function positionStyle(style: StyleProp<ViewStyle>, position: Position): 
 export function FlashMessageTransition(animValue: Animated.Value, position: Position): Transition;
 export default class FlashMessage extends React.Component<FlashMessageProps> {
   static setColorTheme(theme: ColorTheme): void;
+  showMessage(options: MessageOptions): void;
+  hideMessage(): void;
 }
 
 export interface ColorTheme {
