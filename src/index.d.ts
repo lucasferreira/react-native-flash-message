@@ -8,7 +8,7 @@ export type Icon =
   | MessageType
   | {
       icon: MessageType;
-      position: Position;
+      position: "left" | "right";
     };
 
 export type Transition =
