@@ -25,6 +25,7 @@ export interface Message {
   type?: string;
   backgroundColor?: string;
   color?: string;
+  duration?: number;
 }
 
 export interface MessageComponentProps {
