@@ -67,7 +67,7 @@ const statusBarHeight = (isLandscape = false) => {
 };
 
 const doubleFromPercentString = percent => {
-  if (!percent.includes("%")) {
+  if (!percent || !percent.includes("%")) {
     return 0;
   }
 
