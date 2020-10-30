@@ -58,6 +58,7 @@ export interface MessageOptions {
   icon?: Icon;
   message: string;
   position?: Position;
+  style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   titleStyle?: StyleProp<TextStyle>;
   type?: MessageType;
