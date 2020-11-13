@@ -5,9 +5,9 @@ export type Position = "top" | "bottom" | "center" | { top?: number, left?: numb
 export type MessageType = "none" | "default" | "info" | "success" | "danger" | "warning";
 
 export type Icon =
-  | MessageType
+  | MessageType | "auto"
   | {
-      icon: MessageType;
+      icon: MessageType | "auto";
       position: "left" | "right";
     };
 
