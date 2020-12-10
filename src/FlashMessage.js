@@ -551,7 +551,8 @@ export default class FlashMessage extends Component {
     this.toggleVisibility(false, animated);
   }
   render() {
-    const { renderFlashMessageIcon, renderCustomContent, MessageComponent } = this.props;
+    const { MessageComponent } = this.props;
+    let { renderCustomContent, renderFlashMessageIcon } = this.props;
     const { message, visibleValue } = this.state;
 
     const style = this.prop(message, "style");
@@ -563,6 +564,8 @@ export default class FlashMessage extends Component {
     const icon = parseIcon(this.prop(message, "icon"));
     const hideStatusBar = this.prop(message, "hideStatusBar");
     const transitionConfig = this.prop(message, "transitionConfig");
+    renderCustomContent = this.prop(message, "renderCustomContent") || renderCustomContent;
+    renderFlashMessageIcon = this.prop(message, "renderFlashMessageIcon") || renderFlashMessageIcon;
     const animated = this.isAnimated(message);
     const animStyle = animated ? transitionConfig(visibleValue, position) : {};
 
