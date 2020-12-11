@@ -1,21 +1,45 @@
-import React from "react";
-import { StatusBar, View } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, View, StatusBar } from "react-native";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import FlashMessage from "react-native-flash-message";
 
-import AppStack from "./stacks/AppStack";
+import MainStack from "./stacks/MainStack";
+import ModalScreen from "./screens/ModalScreen";
 
-export default class App extends React.Component {
-  componentDidMount() {
+const AppStack = createStackNavigator();
+
+export default function App() {
+  useEffect(() => {
     StatusBar.setBarStyle("light-content");
-  }
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <AppStack />
-        {/* GLOBAL FLASH MESSAGE COMPONENT INSTANCE */}
-        <FlashMessage position="top" animated={true} />
-      </View>
-    );
-  }
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <NavigationContainer>
+        <AppStack.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: "#393939",
+            },
+            headerTintColor: "#fff",
+            headerBackTitle: "Back",
+          }}>
+          <AppStack.Screen name="MainStack" component={MainStack} options={{ headerShown: false }} />
+          <AppStack.Screen name="DemoModal" component={ModalScreen} />
+        </AppStack.Navigator>
+      </NavigationContainer>
+      {/* GLOBAL FLASH MESSAGE COMPONENT INSTANCE */}
+      <FlashMessage />
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+});

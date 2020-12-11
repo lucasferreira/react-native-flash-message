@@ -6,6 +6,7 @@ import FlashMessage, {
   showMessage,
   hideMessage,
   FlashMessageTransition,
+  renderFlashMessageIcon,
 } from "./FlashMessage";
 
 export {
@@ -16,6 +17,7 @@ export {
   showMessage,
   hideMessage,
   FlashMessageTransition,
+  renderFlashMessageIcon,
 };
 
 export default FlashMessage;

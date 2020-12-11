@@ -138,6 +138,33 @@ export default class MainScreen extends React.Component {
               <DemoButton
                 style={styles.demoButton}
                 labelStyle={{ fontSize: 14 }}
+                label="Message Custom Content"
+                onPress={() =>
+                  this.showSimpleMessage("info", {
+                    renderCustomContent: () => (
+                      <View style={{ padding: 9 }}>
+                        <Text>What?</Text>
+                      </View>
+                    ),
+                  })
+                }
+              />
+              <DemoButton
+                style={styles.demoButton}
+                labelStyle={{ fontSize: 14 }}
+                label="Message Long Message"
+                onPress={() =>
+                  showMessage({
+                    message: "Messsage Title",
+                    description: "really long message really long message really long message wow so long Message",
+                    type: "info",
+                    icon: "info",
+                  })
+                }
+              />
+              <DemoButton
+                style={styles.demoButton}
+                labelStyle={{ fontSize: 14 }}
                 label="Message without Anim"
                 onPress={() => this.showSimpleMessage("info", { animated: false })}
               />

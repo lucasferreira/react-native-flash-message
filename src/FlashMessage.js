@@ -167,79 +167,86 @@ export const renderFlashMessageIcon = (icon = "success", style = {}, customProps
  * This component it's wrapped in `FlashMessageWrapper` to handle orientation change and extra inset padding in special devices
  * For most of uses this component doesn't need to be change for custom versions, cause it's very customizable
  */
-export const DefaultFlash = ({
-  message,
-  style,
-  textStyle,
-  titleStyle,
-  titleProps,
-  renderFlashMessageIcon,
-  position = "top",
-  renderCustomContent,
-  floating = false,
-  icon,
-  hideStatusBar = false,
-  ...props
-}) => {
-  const hasDescription = !!message.description && message.description !== "";
-  const iconView =
-    !!icon &&
-    !!icon.icon &&
-    renderFlashMessageIcon(icon.icon === "auto" ? message.type : icon.icon, [
-      icon.position === "left" && styles.flashIconLeft,
-      icon.position === "right" && styles.flashIconRight,
-      icon.style,
-    ]);
-  const hasIcon = !!iconView;
+export const DefaultFlash = React.forwardRef(
+  (
+    {
+      message,
+      style,
+      textStyle,
+      titleStyle,
+      titleProps,
+      textProps,
+      renderFlashMessageIcon,
+      position = "top",
+      renderCustomContent,
+      floating = false,
+      icon,
+      hideStatusBar = false,
+      ...props
+    },
+    ref
+  ) => {
+    const hasDescription = !!message.description && message.description !== "";
+    const iconView =
+      !!icon &&
+      !!icon.icon &&
+      renderFlashMessageIcon(icon.icon === "auto" ? message.type : icon.icon, [
+        icon.position === "left" && styles.flashIconLeft,
+        icon.position === "right" && styles.flashIconRight,
+        icon.style,
+      ]);
+    const hasIcon = !!iconView;
 
-  return (
-    <FlashMessageWrapper position={typeof position === "string" ? position : null}>
-      {wrapperInset => (
-        <View
-          style={styleWithInset(
-            [
-              styles.defaultFlash,
-              position === "center" && styles.defaultFlashCenter,
-              position !== "center" && floating && styles.defaultFlashFloating,
-              hasIcon && styles.defaultFlashWithIcon,
-              !!message.backgroundColor
-                ? { backgroundColor: message.backgroundColor }
-                : !!message.type &&
-                  !!FlashMessage.ColorTheme[message.type] && {
-                    backgroundColor: FlashMessage.ColorTheme[message.type],
-                  },
-              style,
-            ],
-            wrapperInset,
-            !!hideStatusBar,
-            position !== "center" && floating ? "margin" : "padding"
-          )}
-          {...props}>
-          {hasIcon && icon.position === "left" && iconView}
-          <View style={styles.flashLabel}>
-            <Text
-              style={[
-                styles.flashText,
-                hasDescription && styles.flashTitle,
-                !!message.color && { color: message.color },
-                titleStyle,
-              ]}
-              {...titleProps}>
-              {message.message}
-            </Text>
-            {!!renderCustomContent && renderCustomContent(message)}
-            {hasDescription && (
-              <Text style={[styles.flashText, !!message.color && { color: message.color }, textStyle]}>
-                {message.description}
-              </Text>
+    return (
+      <FlashMessageWrapper ref={ref} position={typeof position === "string" ? position : null}>
+        {wrapperInset => (
+          <View
+            style={styleWithInset(
+              [
+                styles.defaultFlash,
+                position === "center" && styles.defaultFlashCenter,
+                position !== "center" && floating && styles.defaultFlashFloating,
+                hasIcon && styles.defaultFlashWithIcon,
+                !!message.backgroundColor
+                  ? { backgroundColor: message.backgroundColor }
+                  : !!message.type &&
+                    !!FlashMessage.ColorTheme[message.type] && {
+                      backgroundColor: FlashMessage.ColorTheme[message.type],
+                    },
+                style,
+              ],
+              wrapperInset,
+              !!hideStatusBar,
+              position !== "center" && floating ? "margin" : "padding"
             )}
+            {...props}>
+            {hasIcon && icon.position === "left" && iconView}
+            <View style={styles.flashLabel}>
+              <Text
+                style={[
+                  styles.flashText,
+                  hasDescription && styles.flashTitle,
+                  !!message.color && { color: message.color },
+                  titleStyle,
+                ]}
+                {...textProps}
+                {...titleProps}>
+                {message.message}
+              </Text>
+              {!!renderCustomContent && renderCustomContent(message)}
+              {hasDescription && (
+                <Text style={[styles.flashText, !!message.color && { color: message.color }, textStyle]} {...textProps}>
+                  {message.description}
+                </Text>
+              )}
+            </View>
+            {hasIcon && icon.position === "right" && iconView}
           </View>
-          {hasIcon && icon.position === "right" && iconView}
-        </View>
-      )}
-    </FlashMessageWrapper>
-  );
-};
+        )}
+      </FlashMessageWrapper>
+    );
+  }
+);
 
 DefaultFlash.propTypes = {
   message: MessagePropType,
@@ -348,7 +355,6 @@ export default class FlashMessage extends Component {
     icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     renderFlashMessageIcon: PropTypes.func,
     transitionConfig: PropTypes.func,
-    MessageComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   };
   /**
    * Your can customize the default ColorTheme of this component
@@ -379,12 +385,12 @@ export default class FlashMessage extends Component {
     };
   }
   componentDidMount() {
-    if (this.props.canRegisterAsDefault) {
+    if (this.props.canRegisterAsDefault !== false) {
       FlashMessageManager.register(this);
     }
   }
   componentWillUnmount() {
-    if (this.props.canRegisterAsDefault) {
+    if (this.props.canRegisterAsDefault !== false) {
       FlashMessageManager.unregister(this);
     }
   }
@@ -551,21 +557,21 @@ export default class FlashMessage extends Component {
     this.toggleVisibility(false, animated);
   }
   render() {
-    const { MessageComponent } = this.props;
-    let { renderCustomContent, renderFlashMessageIcon } = this.props;
     const { message, visibleValue } = this.state;
 
+    const { MessageComponent, testID, accessible, accessibilityLabel, ...otherProps } = this.props;
+    const renderCustomContent = this.prop(message, "renderCustomContent");
+    const renderFlashMessageIcon = this.prop(message, "renderFlashMessageIcon");
     const style = this.prop(message, "style");
     const textStyle = this.prop(message, "textStyle");
     const titleStyle = this.prop(message, "titleStyle");
     const titleProps = this.prop(message, "titleProps");
+    const textProps = this.prop(message, "textProps");
     const floating = this.prop(message, "floating");
     const position = this.prop(message, "position");
     const icon = parseIcon(this.prop(message, "icon"));
     const hideStatusBar = this.prop(message, "hideStatusBar");
     const transitionConfig = this.prop(message, "transitionConfig");
-    renderCustomContent = this.prop(message, "renderCustomContent") || renderCustomContent;
-    renderFlashMessageIcon = this.prop(message, "renderFlashMessageIcon") || renderFlashMessageIcon;
     const animated = this.isAnimated(message);
     const animStyle = animated ? transitionConfig(visibleValue, position) : {};
 
@@ -577,7 +583,7 @@ export default class FlashMessage extends Component {
           animStyle,
         ]}>
         {!!message && (
-          <TouchableWithoutFeedback onPress={this.pressMessage} onLongPress={this.longPressMessage} accessible={false} >
+          <TouchableWithoutFeedback onPress={this.pressMessage} onLongPress={this.longPressMessage} accessible={false}>
             <MessageComponent
               position={position}
               floating={floating}
@@ -590,6 +596,10 @@ export default class FlashMessage extends Component {
               textStyle={textStyle}
               titleStyle={titleStyle}
               titleProps={titleProps}
+              textProps={textProps}
+              accessible={!!accessible}
+              testID={testID}
+              accessibilityLabel={accessibilityLabel}
             />
           </TouchableWithoutFeedback>
         )}
@@ -647,6 +657,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   flashLabel: {
+    flex: 1,
     flexDirection: "column",
   },
   flashText: {
