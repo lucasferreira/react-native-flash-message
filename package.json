@@ -1,6 +1,6 @@
 {
   "name": "react-native-flash-message",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "React Native flashbar and top notification alert utility",
   "main": "src/index.js",
   "types": "src/index.d.ts",

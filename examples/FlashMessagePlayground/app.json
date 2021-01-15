@@ -2,7 +2,7 @@
   "expo": {
     "name": "Flash Message Playground",
     "description": "Use this playground app to try out react-native-flash-message versatile uses",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "slug": "FlashMessagePlayground",
     "privacy": "public",
     "orientation": "portrait",
