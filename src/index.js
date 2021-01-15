@@ -1,5 +1,5 @@
 import FlashMessageManager from "./FlashMessageManager";
-import FlashMessageWrapper, { styleWithInset } from "./FlashMessageWrapper";
+import FlashMessageWrapper, { getFlashMessageStatusBarHeight, styleWithInset } from "./FlashMessageWrapper";
 import FlashMessage, {
   DefaultFlash,
   positionStyle,
@@ -13,6 +13,7 @@ export {
   FlashMessageManager,
   DefaultFlash,
   styleWithInset,
+  getFlashMessageStatusBarHeight,
   positionStyle,
   showMessage,
   hideMessage,

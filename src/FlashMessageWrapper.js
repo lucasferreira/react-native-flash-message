@@ -35,10 +35,12 @@ const isIPad = (() => {
 
 const isOrientationLandscape = ({ width, height }) => width > height;
 
-let _customStatusBarHeight = null;
-const statusBarHeight = (isLandscape = false) => {
-  if (_customStatusBarHeight !== null) {
-    return _customStatusBarHeight;
+/**
+ * Helper function to get the current status bar height to plus in paddingTop message
+ */
+export function getFlashMessageStatusBarHeight(isLandscape = false, _customStatusBarHeight = null) {
+  if (_customStatusBarHeight !== null && _customStatusBarHeight !== false) {
+    return typeof _customStatusBarHeight === "function" ? _customStatusBarHeight(isLandscape) : +_customStatusBarHeight;
   }
 
   /**
@@ -48,7 +50,11 @@ const statusBarHeight = (isLandscape = false) => {
    * we do.
    */
   if (isAndroid) {
-    return Math.max(+StatusBar.currentHeight, 6);
+    if (!!global && !!global.Expo) {
+      return +StatusBar.currentHeight + 6;
+    }
+
+    return 6;
   }
 
   if (isIPhoneX) {
@@ -60,7 +66,7 @@ const statusBarHeight = (isLandscape = false) => {
   }
 
   return isLandscape ? 0 : 20;
-};
+}
 
 const doubleFromPercentString = percent => {
   if (!percent || !percent.includes("%")) {
@@ -177,9 +183,6 @@ export default class FlashMessageWrapper extends Component {
     position: PropTypes.string,
     children: PropTypes.func.isRequired,
   };
-  static setStatusBarHeight = height => {
-    _customStatusBarHeight = height;
-  };
   constructor() {
     super();
 
@@ -199,10 +202,10 @@ export default class FlashMessageWrapper extends Component {
     this.setState({ isLandscape });
   }
   render() {
-    const { position, children } = this.props;
+    const { position, statusBarHeight = null, children } = this.props;
     const { isLandscape } = this.state;
 
-    const _statusBarHeight = statusBarHeight(isLandscape);
+    const _statusBarHeight = getFlashMessageStatusBarHeight(isLandscape, statusBarHeight);
 
     /**
      * This wrapper will return data about extra inset padding, statusBarHeight and some device detection like iPhoneX and iPad

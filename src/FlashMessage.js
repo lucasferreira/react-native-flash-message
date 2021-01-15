@@ -178,6 +178,7 @@ export const DefaultFlash = React.forwardRef(
       textProps,
       renderFlashMessageIcon,
       position = "top",
+      statusBarHeight = null,
       renderCustomContent,
       floating = false,
       icon,
@@ -198,7 +199,10 @@ export const DefaultFlash = React.forwardRef(
     const hasIcon = !!iconView;
 
     return (
-      <FlashMessageWrapper ref={ref} position={typeof position === "string" ? position : null}>
+      <FlashMessageWrapper
+        ref={ref}
+        position={typeof position === "string" ? position : null}
+        statusBarHeight={statusBarHeight}>
         {wrapperInset => (
           <View
             style={styleWithInset(
@@ -305,6 +309,10 @@ export default class FlashMessage extends Component {
      * Note: Works OK in iOS, not all Android versions support this.
      */
     hideStatusBar: false,
+    /**
+     * Custom status bar height size prop to sum in message padding top
+     */
+    statusBarHeight: null,
     /**
      * The `floating` prop unstick the message from the edges and applying some border radius to component
      */
@@ -569,6 +577,7 @@ export default class FlashMessage extends Component {
     const textProps = this.prop(message, "textProps");
     const floating = this.prop(message, "floating");
     const position = this.prop(message, "position");
+    const statusBarHeight = this.prop(message, "statusBarHeight");
     const icon = parseIcon(this.prop(message, "icon"));
     const hideStatusBar = this.prop(message, "hideStatusBar");
     const transitionConfig = this.prop(message, "transitionConfig");
@@ -591,6 +600,7 @@ export default class FlashMessage extends Component {
               hideStatusBar={hideStatusBar}
               renderFlashMessageIcon={renderFlashMessageIcon}
               renderCustomContent={renderCustomContent}
+              statusBarHeight={statusBarHeight}
               icon={icon}
               style={style}
               textStyle={textStyle}
