@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { Dimensions, Platform, StyleSheet } from "react-native";
+import { Dimensions, Platform, StatusBar, StyleSheet } from "react-native";
 import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
 import PropTypes from "prop-types";
-import Constants from "expo-constants";
 
 /**
  * DETECTION AND DIMENSIONS CODE FROM:
@@ -49,11 +48,7 @@ const statusBarHeight = (isLandscape = false) => {
    * we do.
    */
   if (isAndroid) {
-    if (global.Expo) {
-      return Constants.statusBarHeight + 6;
-    } else {
-      return 6;
-    }
+    return Math.max(+StatusBar.currentHeight, 6);
   }
 
   if (isIPhoneX) {

@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { StyleSheet, View, StatusBar } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -12,10 +12,6 @@ import ModalScreen from "./screens/ModalScreen";
 const AppStack = createStackNavigator();
 
 export default function App() {
-  useEffect(() => {
-    StatusBar.setBarStyle("light-content");
-  }, []);
-
   return (
     <View style={styles.container}>
       <NavigationContainer>
