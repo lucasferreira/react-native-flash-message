@@ -55,6 +55,7 @@ export interface MessageOptions {
   floating?: boolean;
   hideOnPress?: boolean;
   hideStatusBar?: boolean;
+  statusBarHeight?: number;
   icon?: Icon;
   message: string;
   position?: Position;
