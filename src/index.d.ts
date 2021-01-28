@@ -65,6 +65,11 @@ export interface MessageOptions {
   onHide?(): void;
   onPress?(): void;
   onLongPress?(): void;
+  renderFlashMessageIcon?(
+    icon: Icon,
+    style: StyleProp<ImageStyle>,
+    customProps: Partial<ImageProps>
+  ): React.ReactElement<{}> | null;
 }
 
 export interface FlashMessageProps extends Partial<MessageOptions> {
