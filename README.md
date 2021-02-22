@@ -15,6 +15,9 @@
   <a href="https://npmjs.org/package/react-native-flash-message" title="View this project on npm">
     <img src="http://img.shields.io/npm/l/react-native-flash-message.svg?style=flat-square" alt="npm licence" />
   </a>
+  <a href="https://www.paypal.com/donate?business=ZMAJTXD5HYWCQ&item_name=open-source+dev+flash+message&currency_code=USD" title="If this project help you reduce time to develop, you can give me a cup of coffee :)">
+    <img src="https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square" alt="help this project" />
+  </a>
 </p>
 
 ## Installation
@@ -129,7 +132,7 @@ Other `message object` attributes will be detailed below.
 | autoHide               | `true`                   | Yes               | Controls if the flash message can hide itself after some `duration` time                                                                                                                                                                                                                          |
 | duration               | `1850`                   | Yes               | How many milliseconds the flash message will be shown if the `autoHide` it's true                                                                                                                                                                                                                 |
 | hideStatusBar          | `false`                  | Yes               | Controls if the flash message will auto hide the native status bar. _Note: Works OK in iOS, not all Android versions support this._                                                                                                                                                               |
-| statusBarHeight        | `none`                   | Yes               | Use this prop to set a custom status bar height that will be add in flash message padding top calc                                                                                                                                                                                               |
+| statusBarHeight        | `none`                   | Yes               | Use this prop to set a custom status bar height that will be add in flash message padding top calc                                                                                                                                                                                                |
 | floating               | `false`                  | Yes               | The `floating` prop unstick the message from the edges and applying some border radius to component                                                                                                                                                                                               |
 | position               | `top`                    | Yes               | The `position` prop set the position of a flash message. _Expected options: "top" (default), "bottom", "center" or a custom object with `{ top, left, right, bottom` } position_                                                                                                                  |
 | icon                   | `none`                   | Yes               | The `icon` prop set the graphical icon of a flash message. _Expected options: "none" (default), "auto" (guided by `type`), "success", "info", "warning", "danger" or a custom object with icon type/name and position (left or right) attributes, e.g.: `{ icon: "success", position: "right" }`_ |
@@ -188,6 +191,12 @@ The main _MessageComponent_ (responsible for render the messages) it's `DefaultF
 ## Documentation
 
 More details and usages will coming soon.
+
+## Donation
+
+If this project help you reduce time to develop, you can give me a cup of coffee :)
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?business=ZMAJTXD5HYWCQ&item_name=open-source+dev+flash+message&currency_code=USD)
 
 ## License
 
