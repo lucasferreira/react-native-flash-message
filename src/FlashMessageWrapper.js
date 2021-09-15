@@ -198,7 +198,7 @@ export default class FlashMessageWrapper extends Component {
   }
   componentWillUnmount() {
     if (!!this.dimensionsSubscription) {
-      this.dimensionsSubscription.remove("change", this.handleOrientationChange);
+      this.dimensionsSubscription.remove();
     }
   }
   handleOrientationChange({ window }) {
