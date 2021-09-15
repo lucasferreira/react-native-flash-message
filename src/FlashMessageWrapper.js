@@ -187,18 +187,19 @@ export default class FlashMessageWrapper extends Component {
     super();
 
     this.handleOrientationChange = this.handleOrientationChange.bind(this);
+    this.dimensionsSubscription = null;
 
-    const isLandscape = isOrientationLandscape(Dimensions.get("window"));
-    const dimensions_subscription = null;
-    this.state = { isLandscape };
-    
+    this.state = {
+      isLandscape: isOrientationLandscape(Dimensions.get("window")),
+    };
   }
   componentDidMount() {
-    dimensions_subscription = Dimensions.addEventListener("change", this.handleOrientationChange);
-   
+    this.dimensionsSubscription = Dimensions.addEventListener("change", this.handleOrientationChange);
   }
   componentWillUnmount() {
-    dimensions_subscription.remove("change", this.handleOrientationChange);
+    if (!!this.dimensionsSubscription) {
+      this.dimensionsSubscription.remove("change", this.handleOrientationChange);
+    }
   }
   handleOrientationChange({ window }) {
     const isLandscape = isOrientationLandscape(window);
