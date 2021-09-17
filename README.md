@@ -47,18 +47,16 @@ import React from "react";
 import { View } from "react-native";
 import FlashMessage from "react-native-flash-message";
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <View ref={"otherView1"} />
-        <View ref={"otherView2"} />
-        <View ref={"otherView3"} />
-        {/* GLOBAL FLASH MESSAGE COMPONENT INSTANCE */}
-        <FlashMessage position="top" /> {/* <--- here as last component */}
-      </View>
-    );
-  }
+function App() {
+  return (
+    <View style={{ flex: 1 }}>
+      <View ref={"otherView1"} />
+      <View ref={"otherView2"} />
+      <View ref={"otherView3"} />
+      {/* GLOBAL FLASH MESSAGE COMPONENT INSTANCE */}
+      <FlashMessage position="top" /> {/* <--- here as last component */}
+    </View>
+  );
 }
 ```
 
@@ -83,24 +81,22 @@ import { View, Button } from "react-native";
 
 import { showMessage, hideMessage } from "react-native-flash-message";
 
-class MyScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <Button
-          onPress={() => {
-            /* HERE WE GONE SHOW OUR FIRST MESSAGE */
-            showMessage({
-              message: "Simple message",
-              type: "info",
-            });
-          }}
-          title="Request Details"
-          color="#841584"
-        />
-      </View>
-    );
-  }
+function MyScreen() {
+  return (
+    <View style={{ flex: 1 }}>
+      <Button
+        onPress={() => {
+          /* HERE WE GONE SHOW OUR FIRST MESSAGE */
+          showMessage({
+            message: "Simple message",
+            type: "info",
+          });
+        }}
+        title="Request Details"
+        color="#841584"
+      />
+    </View>
+  );
 }
 ```
 
@@ -174,6 +170,17 @@ showMessage({
     /* THIS FUNC/CB WILL BE CALLED AFTER MESSAGE PRESS */
   },
 });
+```
+
+## Disable all messages
+
+If you need for some reason to "turn off" all the flash messages, you could use the `FlashMessageManager` utility class:
+
+```javascript
+import { FlashMessageManager } from "react-native-flash-message";
+
+// true to disable, false to enable
+FlashMessageManager.setDisabled(true);
 ```
 
 ## iPhone X

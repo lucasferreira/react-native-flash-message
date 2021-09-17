@@ -84,9 +84,9 @@ export function positionStyle(style, position) {
  * ```
  */
 export function showMessage(...args) {
-  const ref = FlashMessageManager.getDefault();
-  if (!!ref) {
-    ref.showMessage(...args);
+  if (!!FlashMessageManager._enabled) {
+    const ref = FlashMessageManager.getCurrent();
+    if (!!ref) ref.showMessage(...args);
   }
 }
 
@@ -98,9 +98,9 @@ export function showMessage(...args) {
  * ```
  */
 export function hideMessage(...args) {
-  const ref = FlashMessageManager.getDefault();
-  if (!!ref) {
-    ref.hideMessage(...args);
+  if (!!FlashMessageManager._enabled) {
+    const ref = FlashMessageManager.getCurrent();
+    if (!!ref) ref.hideMessage(...args);
   }
 }
 
@@ -141,25 +141,20 @@ export function FlashMessageTransition(animValue, position = "top") {
   };
 }
 
+// prettier-ignore
+const DefaultIcons = {
+  success: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBCAQAAAAk/gHOAAADSElEQVR42u2ZwUsbQRTGv4IFBbXYtAQFIR5E8A9wrdUmvUgptUVItEd78dyzYMGrCMWznrx5sFfBQ9oaeoiCJGmbapXkoELJRXLQmITslo3R2ezO7szszubkfMe8mffL7Ns3b98A98PN6EEU68iggBJq0OqqoYQCMlhHFD1+Oh/AMnKoNNzaqYIcljEg330MKVQZzo2qIoWYPPezyAs4NyqPWe/uh5CE6hJAl4okhrwALOLKg/tbXWHRnfsu7Epwf6tddIkChHAmEUDXGUIiAMO4kAyg6wLD/DvgB8ANRIgvBs59AtB1zhMTCR8BdCVYAEs+A+hacgIYlJIH2Hli0B7hoAUAug7sAKKeUrFY2o7SEfItArg5wChjuoUAuqatCGkf3PzAZ9vf0maAfqGChE8ZPKqftnZFTX8zwop0gJ94enfk0y1WmhFykgF+3QHo4xPVJmcE6GYWpaIAT0wP+iO10O0mBlNSAX4jYAn2UarlFDFYkwjwx7IDwEtcUm3XiElGGsAhZQcito85Q4wKkgCOKDsQcYizAjErOS78AV+4AP5SAMKOgV4ihjUHszcAHiDOAWB9BBMoO86pEVN7o7cNizZ8lQ6gi4nwzrBgG74JAYxzADAQVERMi7bhOzfAGBeA5hwLKl5bFqZBHFEBrrkAauw34j0TggbwjBOg6Y2wzws0iIQjwCg3QFNeSDmYWTsEDxsQtEyoCABoSJGJq46GMxSILP553AFdq2TqJMPUCvHYXPO4ANAwSSZ3MuuFGeaH4JgwQAWdxgWOmROcIZ4LA2g4Nrd02FPsO2jjLgA0c/snyFVB0yEmXAFUETQvlOSaaIV44QpAQxKU0kJzARHmPAusitA29JBzctSAXXZd4FFHmPvLOuYRQEXYLrLj3Iu8guLh2yNu/3b32hTb9H/iFuASvU4pZq4Fn/VzrES76TPAJrvp146sjwBZtPM0PwPS+8+kDx3gbQH34dQHgFP0iTTCA9IbP2n+HSAxsSERYIMvBmi3UkUJ7ovebqiC2PJ4N7VlPZTFh4J9lwD7UORdFI5gW+hQKmMbI/KvSwOYxx6zQLnGHubFo19kdEDBAnZwgiKq9ThRUUURJ9jBAhR03F/ruxn/ATogMH6gfbG4AAAAAElFTkSuQmCC",
+  info: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBCAQAAAAk/gHOAAAB/0lEQVR42u2ZsYrCQBCG/9JrFQTf4CqjjyF4jYW1voiCFoKIgvEBhKQUEYS0dtcK6UM68wAWwUaPICEmeprJbtzhuP3rf+cjbGZnZ4D/lWV9oIoOFrBgw4OPM3x4sGFhgQ6q+MgzeBEtGHBweSoHBlooyg+vYQ73RfBbuZhDkxe+BhMnQvhQJ5ioiYcvY4xjhvChjhijLALQwF4gfKg9GtnCFzCQED7UAAUqQAkriQCBVihRACrYSQYItEMl/RfIA+AKUUp3BtY5AQRapzkTwxwBAg1fATRTb7XBV0yb1M7m80SUPg/0E94+IU88SVYzwgedJrxTgnf2G0CdlIpFEI6oP0YwScdKBOEC8/F9SLsNewl/j3iLPrhDdeLPtUUrpi3Rr99XRG7O+eC+qElUVu03AwRqxxEMBQhGvCp2yBss8RnTkryDc1ttaxJyfZa75abA7Wawi+WFq7qRfaEIYRHZLUUIVmS3FSHYkd1ThOBFdl8Rgh/Zz4oQzqy+AoOzwOCPYJAXGGRHBneEpghBE6sXxBGceHfOUIBgiNaO4ght0QpaFMG9703qb0bQxV9TYginxx1J5W9KFi9rBv0FWpdlkvBO5HRZKL2mUcI5ktNroryKDviO6SCr48ai78ig+8qiB82iE89iHsFiKsNkNsViQsdkTslkWstkZv131w9xpmDY0IYKPAAAAABJRU5ErkJggg==",
+  warning: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBCAQAAAAk/gHOAAACpUlEQVR42u2ZPUsrQRSGnxgVG0OCgtgJFhYR4y+wshFvpVgrdhb+AEEJKCgoGoxpbNRLUliICEpaW72CQgoLIaSS/IAUIU1yCfeGza75mLOz66Rw3vo958lm5sycGfgZbsYQM6yRIkuOImWqlCmSI0uKNWYY8jN5hCXS5Kl1VJ40S0S8Tx8jSaFL8mYVSBLzLv0sGSqC9A1VyDCrn36EQ0ou0jdU4pARHYAF3jTSN/TGgrv0A+x6kL6hXQakACFuPASo64aQBGCUR48B6npkVP0L+AHwDyKkNgdufQKo61ZlTuz5CFDXXjeAReVQd/yy6U7Zudh5F1CvA3GHNy6oEx12kITgg544vCcCb6IdwLSoFOsglJhujZARTSsdhBqZVgBR4W6oh1Ah+hXhTLi49BBqnDkBhkUHEi8QCgzbAyyLS4wuQo1le4C0AYS0fV/IG0DIN+8XUy5qvT5CjSnLvmoIYdWypwwhpCx71hBC1rLnDCHkLHvREELRspcNIZQte9UQQrWnvkIPzIUeWBE9UBeShhCSln3FEMKKZZ8whDBh2YMuzgs7DoQdF+eFYHOAK3GAd37b9C6OcGX/DfM+N7OtNG9HGBSfoHVVYNB5jD8SV7Y/Nkkr7NHXVmZc2E0dOPwHwm5qvFVLdyEKcuxwH4vcF63b2rFv7KzH2rX38W9CiLe/4ujn9Rv+iFf6O131RJUD7Tuc+8rOaLcLrw3lRflkk+qi3FC5ebz0sSBdqt2+9vHgE8ADfapXwEHufQC4t++M3UaAc48BzgnIXyTWPQRYd/sqM8mzB+mfmdR5Ggqyqfk2tSmbAa1HmFOXL3SnhL17KAyzJTpf5tnyMr1VL2Ik+OiS/IMEMfX172YEiDDHNte88Pn/zfqTF67ZZo6Im6X3M+AvvehZ3bNZqSIAAAAASUVORK5CYII=",
+  danger: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBCAQAAAAk/gHOAAADgUlEQVR42u2Zz0tbQRDHvxq1UmqaoFU8tAgePESMf4EgeBF7qdaz4s2Df4AgTTGWtrEm5oe1IqiYQD2IFyW34sFCawMKOQbEk+QP8BC8xJLa8PLy5u3ubN67uXN7md35ZHd2ZnYXeGw6rR1DmEUKWeRRRAlllFBEHlmkMIshtLtp3I9JpHGFe6FcIY1J+J03H0QC1xLjtXKNBILOmR9GBncM81W5QwbDjZvvRAS3GuarcosIOhsBGMdlA+arcolxPfOtWHbAfFWW0coF8OLQQYCKHMLLAejCqcMAFTlFl/oMuAHwAOFV84EjlwAqcqTiE2EXASoSlgFMkN0usKNhLIFf5PcJcRag4kABLwBEmQDvATxHnowTggwSIwFeCn61jwMPrZuEiNkBDBKhuIBXEkTZelMQtxikETIW1T/ordNRWY6Vuj4+/LToZCiAAJEN9wk9GcQHos93IosGrGpJcsA1RY+pykdC/xupmaxX67AtSFYZEJ8I3U3boqbDrDgl+GcRRYjPhN5XwbhTZtW0cH0jCj5B6WwIR02b84KsKKWmeE0CkJIWujX5YkBhq1GOtipYgqTCmAOG+oxSwKG2WwL3iNt8l8uM+pTZBZ1Ke0N8W1ccL2V0ybJjv6ip55Ks0SmvkYDsGiej5o1uRXYatmurrJGKRscSsxZYwRPywMutKUpG5zK7IholEF6zRynrz0LYZhbW9GeB5wvvBL4Q0fUFzo4ISXZERG9HZB2ZAT5ElhtOaYC3DWzNhNFlWnsJkuaBmBDTRoc+TYCooLz7ojBmn6HukdYLFEC85veoBsQVPLXqe2yAhMLxRAyxZ1Ye0/CBelln+sSYWbXNtoIOMWrCdcZMXKNNjTfErIrVIYjDQS9xmtpgAthBbBOnqV4qqlnvEM4sd4abClut3jGf4odFZ4cOrD3EyTqPbunRTAzhRY44WffYRfcQmUq6mQC1EBSAMNW14IKEeAZgi1kLRP/tsxx5bdQiynIBcrjf2Ne4a9rGGfk9IEu18y7fuM2r3Dzuugiwq3b72owTlwBO0Kx6BezBsQsAx+bMKGtN7B0gky008V8k5hwEmNN9lenHuQPmz9HfyNOQBwsNvk0t8DyAbj7ENV/o4vA591Dow6K0vjTXhYtOmjfiRRAxFCTGC4ghqL7/dVoT/BjBEg6Qw83/N+sb5HCAJYzAr7P1HhvwF5GXIpRNQBinAAAAAElFTkSuQmCC",
+};
+
 export const renderFlashMessageIcon = (icon = "success", style = {}, customProps = {}) => {
-  switch (icon) {
-    case "success":
-      return (
-        <Image style={[styles.flashIcon, style]} source={require("./icons/fm_icon_success.png")} {...customProps} />
-      );
-    case "info":
-      return <Image style={[styles.flashIcon, style]} source={require("./icons/fm_icon_info.png")} {...customProps} />;
-    case "warning":
-      return (
-        <Image style={[styles.flashIcon, style]} source={require("./icons/fm_icon_warning.png")} {...customProps} />
-      );
-    case "danger":
-      return (
-        <Image style={[styles.flashIcon, style]} source={require("./icons/fm_icon_danger.png")} {...customProps} />
-      );
-    default:
-      return null;
+  if (!!DefaultIcons[icon]) {
+    return <Image style={[styles.flashIcon, style]} source={{ uri: DefaultIcons[icon] }} {...customProps} />;
   }
+
+  return null;
 };
 
 /**
@@ -202,7 +197,8 @@ export const DefaultFlash = React.forwardRef(
       <FlashMessageWrapper
         ref={ref}
         position={typeof position === "string" ? position : null}
-        statusBarHeight={statusBarHeight}>
+        statusBarHeight={statusBarHeight}
+      >
         {wrapperInset => (
           <View
             style={styleWithInset(
@@ -223,7 +219,8 @@ export const DefaultFlash = React.forwardRef(
               !!hideStatusBar,
               position !== "center" && floating ? "margin" : "padding"
             )}
-            {...props}>
+            {...props}
+          >
             {hasIcon && icon.position === "left" && iconView}
             <View style={styles.flashLabel}>
               <Text
@@ -234,7 +231,8 @@ export const DefaultFlash = React.forwardRef(
                   titleStyle,
                 ]}
                 {...textProps}
-                {...titleProps}>
+                {...titleProps}
+              >
                 {message.message}
               </Text>
               {!!renderCustomContent && renderCustomContent(message)}
@@ -590,7 +588,8 @@ export default class FlashMessage extends Component {
           positionStyle(styles.root, position),
           position === "center" && !!message && styles.rootCenterEnabled,
           animStyle,
-        ]}>
+        ]}
+      >
         {!!message && (
           <TouchableWithoutFeedback onPress={this.pressMessage} onLongPress={this.longPressMessage} accessible={false}>
             <MessageComponent

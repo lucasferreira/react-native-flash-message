@@ -1,16 +1,21 @@
 import React from "react";
 import { StyleSheet, StatusBar, TouchableOpacity, ScrollView, Text, View } from "react-native";
 
-import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
+import FlashMessage, { FlashMessageManager, showMessage, hideMessage } from "react-native-flash-message";
 
 import DemoButton from "../components/DemoButton";
+import CustomModal from "../components/CustomModal";
 
 const Sepator = ({ style }) => <View style={[styles.separator, style]} />;
 
 export default class MainScreen extends React.Component {
-  static navigationOptions = {
-    title: "Flash Message Demo",
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      customModalVisible: false,
+    };
+  }
   showSimpleMessage(type = "default", props = {}) {
     const message = {
       message: "Some message title",
@@ -195,8 +200,13 @@ export default class MainScreen extends React.Component {
               />
               <DemoButton
                 style={[styles.demoButton, { backgroundColor: "black" }]}
-                label="Message from Modal"
+                label="Message from Navigation Modal"
                 onPress={() => navigation.navigate("DemoModal")}
+              />
+              <DemoButton
+                style={[styles.demoButton, { backgroundColor: "black" }]}
+                label="Message from Native Modal"
+                onPress={() => this.setState({ customModalVisible: true })}
               />
               <DemoButton
                 style={[styles.demoButton, { backgroundColor: "black" }]}
@@ -204,8 +214,24 @@ export default class MainScreen extends React.Component {
                 onPress={() => navigation.navigate("LocalInstance")}
               />
             </View>
+            <Sepator />
+            <View style={styles.group}>
+              <DemoButton
+                style={[styles.demoButton, { backgroundColor: FlashMessageManager.isEnabled ? "#C00" : "green" }]}
+                labelStyle={{ fontSize: 14 }}
+                label={FlashMessageManager.isEnabled ? "Disable all messages" : "Re-enable messages"}
+                onPress={() => {
+                  FlashMessageManager.setDisabled(FlashMessageManager.isEnabled ? true : false);
+                  this.forceUpdate();
+                }}
+              />
+            </View>
           </View>
         </ScrollView>
+        <CustomModal
+          modalVisible={this.state.customModalVisible}
+          setModalVisible={customModalVisible => this.setState({ customModalVisible })}
+        />
       </View>
     );
   }

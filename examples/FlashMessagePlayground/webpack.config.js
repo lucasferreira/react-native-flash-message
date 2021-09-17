@@ -1,6 +1,8 @@
 const path = require("path");
+
 // eslint-disable-next-line import/no-extraneous-dependencies
 const createExpoWebpackConfigAsync = require("@expo/webpack-config");
+
 // eslint-disable-next-line import/no-extraneous-dependencies
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 
@@ -12,7 +14,7 @@ module.exports = async function (env, argv) {
 
   config.module.rules.push({
     test: /\.(js|jsx|ts|tsx)$/,
-    include: path.resolve(__dirname, "../../src"),
+    include: path.resolve(__dirname, "../src"),
     exclude: /node_modules/,
     use: "babel-loader",
   });
@@ -23,9 +25,8 @@ module.exports = async function (env, argv) {
     react: path.resolve(node_modules, "react"),
     "react-native": path.resolve(node_modules, "react-native-web"),
     "react-native-web": path.resolve(node_modules, "react-native-web"),
-    "@babel/runtime": path.resolve(node_modules, "@babel/runtime"),
-    "prop-types": path.resolve(node_modules, "prop-types"),
     [packageName]: path.resolve("../../src/index"),
   });
+
   return config;
 };

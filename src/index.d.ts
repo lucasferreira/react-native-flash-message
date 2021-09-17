@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Animated, ImageProps, ImageStyle, StyleProp, TextStyle, TranslateYTransform, ViewStyle } from "react-native";
 
-export type Position = "top" | "bottom" | "center" | { top?: number, left?: number, bottom?: number, right?: number };
+export type Position = "top" | "bottom" | "center" | { top?: number; left?: number; bottom?: number; right?: number };
 export type MessageType = "none" | "default" | "info" | "success" | "danger" | "warning";
 
 export type Icon =
-  | MessageType | "auto"
+  | MessageType
+  | "auto"
   | {
       icon: MessageType | "auto";
       position: "left" | "right";
@@ -74,6 +75,9 @@ export interface MessageOptions {
 }
 
 export interface FlashMessageProps extends Partial<MessageOptions> {
+  accessible?: boolean;
+  accessibilityLabel?: string;
+  testID?: string;
   canRegisterAsDefault?: boolean;
   style?: StyleProp<ViewStyle>;
   MessageComponent?: React.SFC<MessageComponentProps> | React.ReactElement<MessageComponentProps>;
@@ -86,6 +90,13 @@ export interface FlashMessageProps extends Partial<MessageOptions> {
   renderCustomContent?(message: MessageOptions): React.ReactElement<{}> | null;
 }
 
+export interface ColorTheme {
+  success?: string;
+  info?: string;
+  warning?: string;
+  danger?: string;
+}
+
 export class DefaultFlash extends React.Component<MessageComponentProps> {}
 
 export function showMessage(options: MessageOptions): void;
@@ -93,15 +104,18 @@ export function hideMessage(): void;
 export function positionStyle(style: StyleProp<ViewStyle>, position: Position): StyleProp<ViewStyle>;
 
 export function FlashMessageTransition(animValue: Animated.Value, position: Position): Transition;
+
 export default class FlashMessage extends React.Component<FlashMessageProps> {
   static setColorTheme(theme: ColorTheme): void;
   showMessage(options: MessageOptions): void;
   hideMessage(): void;
 }
 
-export interface ColorTheme {
-  success?: string;
-  info?: string;
-  warning?: string;
-  danger?: string;
+export class FlashMessageManager {
+  setDisabled(disabled: boolean): void;
+  hold(instance: FlashMessage): void;
+  unhold(): void;
+  register(instance: FlashMessage): void;
+  unregister(instance: FlashMessage): void;
+  getCurrent(): FlashMessage;
 }

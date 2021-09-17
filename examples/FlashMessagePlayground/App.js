@@ -2,14 +2,14 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import FlashMessage from "react-native-flash-message";
 
 import MainStack from "./stacks/MainStack";
 import ModalScreen from "./screens/ModalScreen";
 
-const AppStack = createStackNavigator();
+const AppStack = createNativeStackNavigator();
 
 export default function App() {
   return (

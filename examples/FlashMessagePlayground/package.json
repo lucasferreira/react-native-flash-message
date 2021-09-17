@@ -5,30 +5,28 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "upd": "yarn upgrade-interactive --latest",
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-community/masked-view": "0.1.10",
-    "@react-navigation/native": "^5.8.10",
-    "@react-navigation/stack": "^5.12.8",
-    "expo": "~40.0.0",
+    "@react-native-masked-view/masked-view": "0.2.4",
+    "@react-navigation/native": "^6.0.2",
+    "@react-navigation/native-stack": "^6.1.0",
+    "expo": "~42.0.1",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
-    "react-native-gesture-handler": "~1.8.0",
-    "react-native-reanimated": "~1.13.0",
-    "react-native-safe-area-context": "3.1.9",
-    "react-native-screens": "~2.15.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-iphone-x-helper": "^1.3.1",
+    "react-native-safe-area-context": "3.2.0",
+    "react-native-screens": "~3.4.0",
     "react-native-web": "~0.13.12"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/runtime": "^7.15.4",
     "babel-plugin-module-resolver": "^4.0.0",
-    "babel-preset-expo": "^8.3.0",
-    "expo-cli": "^4.0.13"
-  },
-  "resolutions": {
-    "@babel/runtime": "^7.9.0"
+    "babel-preset-expo": "^8.4.1"
   },
   "private": true
 }

@@ -6,9 +6,6 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import DemoButton from "../components/DemoButton";
 
 export default class EventsScreen extends React.Component {
-  static navigationOptions = {
-    title: "Message Events",
-  };
   constructor(props) {
     super(props);
 

@@ -23,9 +23,6 @@ export function YourCustomTransition(animValue, position = "top") {
 }
 
 export default class CustomTransitionScreen extends React.Component {
-  static navigationOptions = {
-    title: "Custom Transition",
-  };
   render() {
     const { navigation } = this.props;
 
