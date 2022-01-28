@@ -29,7 +29,7 @@ export default class MainScreen extends React.Component {
   }
   messageWithPosition(position = "top", hasDescription = true, extra = {}) {
     let message = {
-      message: "Some message title",
+      message: "Some short message title",
       type: "info",
       position,
       ...extra,

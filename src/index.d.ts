@@ -10,6 +10,7 @@ export type Icon =
   | {
       icon: MessageType | "auto";
       position: "left" | "right";
+      props: {};
     };
 
 export type Transition =
@@ -41,7 +42,7 @@ export interface MessageComponentProps {
   renderFlashMessageIcon?(
     icon: Icon,
     style: StyleProp<ImageStyle>,
-    customProps: Partial<ImageProps>
+    iconProps: Partial<ImageProps>
   ): React.ReactElement<{}> | null;
 }
 
@@ -58,6 +59,7 @@ export interface MessageOptions {
   hideStatusBar?: boolean;
   statusBarHeight?: number;
   icon?: Icon;
+  iconProps?: Partial<ImageProps>;
   message: string;
   position?: Position;
   style?: StyleProp<ViewStyle>;
@@ -70,7 +72,7 @@ export interface MessageOptions {
   renderFlashMessageIcon?(
     icon: Icon,
     style: StyleProp<ImageStyle>,
-    customProps: Partial<ImageProps>
+    iconProps: Partial<ImageProps>
   ): React.ReactElement<{}> | null;
 }
 
@@ -85,7 +87,7 @@ export interface FlashMessageProps extends Partial<MessageOptions> {
   renderFlashMessageIcon?(
     icon: Icon,
     style: StyleProp<ImageStyle>,
-    customProps: Partial<ImageProps>
+    iconProps: Partial<ImageProps>
   ): React.ReactElement<{}> | null;
   renderCustomContent?(message: MessageOptions): React.ReactElement<{}> | null;
 }

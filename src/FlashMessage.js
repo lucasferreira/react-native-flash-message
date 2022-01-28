@@ -149,9 +149,9 @@ const DefaultIcons = {
   danger: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBCAQAAAAk/gHOAAADgUlEQVR42u2Zz0tbQRDHvxq1UmqaoFU8tAgePESMf4EgeBF7qdaz4s2Df4AgTTGWtrEm5oe1IqiYQD2IFyW34sFCawMKOQbEk+QP8BC8xJLa8PLy5u3ubN67uXN7md35ZHd2ZnYXeGw6rR1DmEUKWeRRRAlllFBEHlmkMIshtLtp3I9JpHGFe6FcIY1J+J03H0QC1xLjtXKNBILOmR9GBncM81W5QwbDjZvvRAS3GuarcosIOhsBGMdlA+arcolxPfOtWHbAfFWW0coF8OLQQYCKHMLLAejCqcMAFTlFl/oMuAHwAOFV84EjlwAqcqTiE2EXASoSlgFMkN0usKNhLIFf5PcJcRag4kABLwBEmQDvATxHnowTggwSIwFeCn61jwMPrZuEiNkBDBKhuIBXEkTZelMQtxikETIW1T/ordNRWY6Vuj4+/LToZCiAAJEN9wk9GcQHos93IosGrGpJcsA1RY+pykdC/xupmaxX67AtSFYZEJ8I3U3boqbDrDgl+GcRRYjPhN5XwbhTZtW0cH0jCj5B6WwIR02b84KsKKWmeE0CkJIWujX5YkBhq1GOtipYgqTCmAOG+oxSwKG2WwL3iNt8l8uM+pTZBZ1Ke0N8W1ccL2V0ybJjv6ip55Ks0SmvkYDsGiej5o1uRXYatmurrJGKRscSsxZYwRPywMutKUpG5zK7IholEF6zRynrz0LYZhbW9GeB5wvvBL4Q0fUFzo4ISXZERG9HZB2ZAT5ElhtOaYC3DWzNhNFlWnsJkuaBmBDTRoc+TYCooLz7ojBmn6HukdYLFEC85veoBsQVPLXqe2yAhMLxRAyxZ1Ye0/CBelln+sSYWbXNtoIOMWrCdcZMXKNNjTfErIrVIYjDQS9xmtpgAthBbBOnqV4qqlnvEM4sd4abClut3jGf4odFZ4cOrD3EyTqPbunRTAzhRY44WffYRfcQmUq6mQC1EBSAMNW14IKEeAZgi1kLRP/tsxx5bdQiynIBcrjf2Ne4a9rGGfk9IEu18y7fuM2r3Dzuugiwq3b72owTlwBO0Kx6BezBsQsAx+bMKGtN7B0gky008V8k5hwEmNN9lenHuQPmz9HfyNOQBwsNvk0t8DyAbj7ENV/o4vA591Dow6K0vjTXhYtOmjfiRRAxFCTGC4ghqL7/dVoT/BjBEg6Qw83/N+sb5HCAJYzAr7P1HhvwF5GXIpRNQBinAAAAAElFTkSuQmCC",
 };
 
-export const renderFlashMessageIcon = (icon = "success", style = {}, customProps = {}) => {
+export const renderFlashMessageIcon = (icon = "success", style = {}, iconProps = {}) => {
   if (!!DefaultIcons[icon]) {
-    return <Image style={[styles.flashIcon, style]} source={{ uri: DefaultIcons[icon] }} {...customProps} />;
+    return <Image style={[styles.flashIcon, style]} source={{ uri: DefaultIcons[icon] }} {...iconProps} />;
   }
 
   return null;
@@ -171,6 +171,7 @@ export const DefaultFlash = React.forwardRef(
       titleStyle,
       titleProps,
       textProps,
+      iconProps,
       renderFlashMessageIcon,
       position = "top",
       statusBarHeight = null,
@@ -186,11 +187,15 @@ export const DefaultFlash = React.forwardRef(
     const iconView =
       !!icon &&
       !!icon.icon &&
-      renderFlashMessageIcon(icon.icon === "auto" ? message.type : icon.icon, [
-        icon.position === "left" && styles.flashIconLeft,
-        icon.position === "right" && styles.flashIconRight,
-        icon.style,
-      ]);
+      renderFlashMessageIcon(
+        icon.icon === "auto" ? message.type : icon.icon,
+        [
+          icon.position === "left" && styles.flashIconLeft,
+          icon.position === "right" && styles.flashIconRight,
+          icon.style,
+        ],
+        !!iconProps ? iconProps : "props" in icon && !!icon.props ? icon.props : {}
+      );
     const hasIcon = !!iconView;
 
     return (
@@ -396,6 +401,9 @@ export default class FlashMessage extends Component {
     }
   }
   componentWillUnmount() {
+    if (this._hideTimeout) {
+      clearTimeout(this._hideTimeout);
+    }
     if (this.props.canRegisterAsDefault !== false) {
       FlashMessageManager.unregister(this);
     }
@@ -573,6 +581,7 @@ export default class FlashMessage extends Component {
     const titleStyle = this.prop(message, "titleStyle");
     const titleProps = this.prop(message, "titleProps");
     const textProps = this.prop(message, "textProps");
+    const iconProps = this.prop(message, "iconProps");
     const floating = this.prop(message, "floating");
     const position = this.prop(message, "position");
     const statusBarHeight = this.prop(message, "statusBarHeight");
@@ -583,13 +592,7 @@ export default class FlashMessage extends Component {
     const animStyle = animated ? transitionConfig(visibleValue, position) : {};
 
     return (
-      <Animated.View
-        style={[
-          positionStyle(styles.root, position),
-          position === "center" && !!message && styles.rootCenterEnabled,
-          animStyle,
-        ]}
-      >
+      <Animated.View pointerEvents="box-none" style={[positionStyle(styles.root, position), animStyle]}>
         {!!message && (
           <TouchableWithoutFeedback onPress={this.pressMessage} onLongPress={this.longPressMessage} accessible={false}>
             <MessageComponent
@@ -606,6 +609,7 @@ export default class FlashMessage extends Component {
               titleStyle={titleStyle}
               titleProps={titleProps}
               textProps={textProps}
+              iconProps={iconProps}
               accessible={!!accessible}
               testID={testID}
               accessibilityLabel={accessibilityLabel}
@@ -633,21 +637,15 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   rootCenter: {
+    ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
-  },
-  rootCenterEnabled: {
-    top: 0,
-    bottom: 0,
-    width: "100%",
-    height: "100%",
   },
   defaultFlash: {
     justifyContent: "flex-start",
     paddingVertical: 15,
     paddingHorizontal: 20,
     backgroundColor: "#696969",
-    minHeight: OFFSET_HEIGHT,
   },
   defaultFlashCenter: {
     margin: 44,
@@ -666,7 +664,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   flashLabel: {
-    flex: 1,
     flexDirection: "column",
   },
   flashText: {

@@ -63,7 +63,7 @@ export default function CustomModal({ modalVisible = false, setModalVisible }) {
           />
         </View>
       </View>
-      <FlashMessage ref={captureFlashMessageRef} position="bottom" />
+      <FlashMessage ref={captureFlashMessageRef} position="center" />
     </Modal>
   );
 }
@@ -77,16 +77,10 @@ const styles = StyleSheet.create({
     right: 26,
     backgroundColor: "white",
     borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "red",
     padding: 35,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   modalText: {
     marginBottom: 15,
