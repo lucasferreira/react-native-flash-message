@@ -13,12 +13,12 @@ class FlashMessageManager {
   }
   hold(_tempInstance) {
     if ("_id" in _tempInstance) {
-      let wasHolded = false;
+      let wasHeld = false;
       if (this._preservedFlashMessages.length > 0) {
-        wasHolded = this._preservedFlashMessages[this._preservedFlashMessages.length - 1]._id === _tempInstance._id;
+        wasHeld = this._preservedFlashMessages[this._preservedFlashMessages.length - 1]._id === _tempInstance._id;
       }
 
-      if (!wasHolded) {
+      if (!wasHeld) {
         this._preservedFlashMessages.push(this._currentFlashMessage);
         this._currentFlashMessage = null;
 
@@ -28,7 +28,7 @@ class FlashMessageManager {
   }
   unhold() {
     if (this._preservedFlashMessages.length > 0) {
-      // here current intance it's the holded momentarily instance...
+      // here the current intance it's the one that's held momentarily...
       if (!!this._currentFlashMessage) {
         this._currentFlashMessage.hideMessage();
         this._currentFlashMessage = null;
