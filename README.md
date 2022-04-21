@@ -40,7 +40,7 @@ You can try out the [Flash Message Playground app](https://exp.host/@lucasferrei
 
 ## Basic Usage
 
-The _FlashMessage component_ its build for global use, so you have to instance this component once in your main app screen always as the last inserted component:
+The _FlashMessage component_ is built for global use, so you have to instance this component once in your main app screen always as the last inserted component:
 
 ```jsx
 import React from "react";

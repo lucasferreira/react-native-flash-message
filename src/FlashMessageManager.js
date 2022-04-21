@@ -28,7 +28,7 @@ class FlashMessageManager {
   }
   unhold() {
     if (this._preservedFlashMessages.length > 0) {
-      // here the current intance it's the one that's held momentarily...
+      // here the current instance is the one that's held momentarily...
       if (!!this._currentFlashMessage) {
         this._currentFlashMessage.hideMessage();
         this._currentFlashMessage = null;
