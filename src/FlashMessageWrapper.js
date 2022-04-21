@@ -20,16 +20,18 @@ const isIPhoneX = isIphoneX();
 const isIPad = (() => {
   if (Platform.OS !== "ios" || isIPhoneX) return false;
 
-  // if portrait and width is smaller than iPad width
+  // if portrait and width are smaller than the iPad's width...
   if (D_HEIGHT > D_WIDTH && D_WIDTH < PAD_WIDTH) {
-    return false;
+    return false; // It is probably not an iPad
   }
 
-  // if landscape and height is smaller that iPad height
+  // if landscape and height are smaller that the iPad's height...
   if (D_WIDTH > D_HEIGHT && D_HEIGHT < PAD_WIDTH) {
-    return false;
+    return false; // It is probably not an iPad
   }
 
+  // If all verifications go alright
+  // then it is probably an iPad
   return true;
 })();
 
@@ -169,13 +171,13 @@ export function styleWithInsetMargin(style, wrapperInset, hideStatusBar = false)
 }
 
 /**
- * Utility component wrapper to handle orientation changes and extra padding controle for iOS (specially iPads and iPhone X)
+ * Utility component wrapper to handle orientation changes and extra padding control for iOS (specially iPads and iPhone X)
  */
 export default class FlashMessageWrapper extends Component {
   static defaultProps = {
     /**
      * Default FlashMessage position is "top"
-     * Other options like "bottom" and "center" uses other extra padding configurations
+     * Other options like "bottom" and "center" use other extra padding configurations
      */
     position: "top",
   };

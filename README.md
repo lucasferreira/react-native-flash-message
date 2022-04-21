@@ -1,7 +1,7 @@
 ﻿<h1 align="center" style="text-align: center;">react-native-flash-message</h1>
 
 <p align="center" style="font-size: 1.2rem;">
-  <strong>Flash Message</strong> it is a React Native module to help you with easily and highly customizable flashbars, top notifications or alerts <i>(with iPhone X, XR, XS and XS Max "notch" support)</i>.<br /><br />
+  <strong>Flash Message</strong> is a React Native module to help you easily create highly customizable flashbars, top notifications or alerts <i>(with iPhone X, XR, XS and XS Max "notch" support)</i>.<br /><br />
   <img src="https://i.imgur.com/t4COoWT.gif" alt="Global Demo of Flash Message Component" width="86%" style="border: 0; width: 86%; min-width: 240px; max-width: 100%;" />
 </p>
 
@@ -36,11 +36,11 @@ yarn add react-native-flash-message
 
 ## Try it out
 
-You can try out the [Flash Message Playground app](https://exp.host/@lucasferreira/FlashMessagePlayground) to get a tease of the functionalities of this lib.
+You can try out the [Flash Message Playground app](https://exp.host/@lucasferreira/FlashMessagePlayground) to get a tease of the functionalities in this lib.
 
 ## Basic Usage
 
-The _FlashMessage component_ it's build to a global use, so you have to instance this component once in your main app screen always as a last inserted component:
+The _FlashMessage component_ is built for global use, so you have to instance this component once in your main app screen always as the last inserted component:
 
 ```jsx
 import React from "react";
@@ -54,7 +54,7 @@ function App() {
       <View ref={"otherView2"} />
       <View ref={"otherView3"} />
       {/* GLOBAL FLASH MESSAGE COMPONENT INSTANCE */}
-      <FlashMessage position="top" /> {/* <--- here as last component */}
+      <FlashMessage position="top" /> {/* <--- here as the last component */}
     </View>
   );
 }
@@ -67,7 +67,7 @@ If you don't need a global use for _(e.g. will use only in one screen)_ you can 
 ```jsx
 <View style={{ flex: 1 }}>
   <YourMainApp />
-  <FlashMessage ref="myLocalFlashMessage" />   {/* <--- here as last component always with `ref` */}
+  <FlashMessage ref="myLocalFlashMessage" />   {/* <--- here as the last component always with `ref` as a prop */}
 <View>
 ```
 
@@ -86,7 +86,7 @@ function MyScreen() {
     <View style={{ flex: 1 }}>
       <Button
         onPress={() => {
-          /* HERE WE GONE SHOW OUR FIRST MESSAGE */
+          /* HERE IS WHERE WE'RE GOING TO SHOW OUR FIRST MESSAGE */
           showMessage({
             message: "Simple message",
             type: "info",
@@ -112,7 +112,7 @@ showMessage({
 
 The `type` attribute set the type and color of your flash message, default options are _"success" (green), "warning" (orange), "danger" (red), "info" (blue) and "default" (gray)_.
 
-By default all of the messages will be displayed with transitions and with `autoHide` after _1850 ms_ enabled. If you need to programmatically hide some message, you can call `hideMessage()` .
+By default all of the messages will be displayed with transitions and with `autoHide` after _1850 ms_ enabled. If you need to programmatically hide any message, you can call `hideMessage()` .
 
 Other `message object` attributes will be detailed below.
 
@@ -146,7 +146,7 @@ Other `message object` attributes will be detailed below.
 
 ## Message Object
 
-When you call `showMessage` method you need pass a _message object_ to show your message. In this _call_ you could pass some custom attributes to customize your message. Most of the FlashMessage Component props can be passed in runtime calls of `showMessage`. This common props/attributes are identified in **Props** table as _In Message Object_.
+When you call `showMessage` method you'll need to pass a _message object_ to show your message. In this _call_ you could pass some custom attributes to customize your message. Most of the FlashMessage Component props can be passed in runtime calls of `showMessage`. This common props/attributes are identified in **Props** table as _In Message Object_.
 
 If you need to customize de background color or text color of your message beyond the default types _(success, warning, info and danger)_ you could use the `backgroundColor` or/and `color` attributes in your _message object_:
 
@@ -175,7 +175,7 @@ showMessage({
 
 ## Disable all messages
 
-If you need for some reason to "turn off" all the flash messages, you could use the `FlashMessageManager` utility class:
+If you need to, for some reason, "turn off" all the flash messages, you could use the `FlashMessageManager` utility class:
 
 ```javascript
 import { FlashMessageManager } from "react-native-flash-message";
@@ -186,7 +186,7 @@ FlashMessageManager.setDisabled(true);
 
 ## iPhone X
 
-The main _MessageComponent_ (responsible for render the messages) it's `DefaultFlash`. This component it's wrapped in other component called `FlashMessageWrapper` that handles device orientations, statusbar heights and principal wheater or not include the iPhone X "noch" inset padding:
+The main _MessageComponent_ (responsible for rendering the messages) is `DefaultFlash`. This component is wrapped in another component called `FlashMessageWrapper` that handles device orientations, statusbar heights and principal whether or not include the iPhone X "notch" inset padding:
 
 <p align="center">
   <img src="https://i.imgur.com/BfFrInC.gif" alt="iPhone X"/>
@@ -198,11 +198,11 @@ The main _MessageComponent_ (responsible for render the messages) it's `DefaultF
 
 ## Documentation
 
-More details and usages will coming soon.
+More details and use cases coming soon.
 
 ## Donation
 
-If this project help you reduce time to develop, you can give me a cup of coffee :)
+If this project helped you to reduce your developing time, you can give me a cup of coffee :)
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?business=ZMAJTXD5HYWCQ&item_name=open-source+dev+flash+message&currency_code=USD)
 
