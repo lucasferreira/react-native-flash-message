@@ -162,19 +162,6 @@ showMessage({
 });
 ```
 
-## Message with custom icon
-
-To show a custom/diferent icon in a `showMessage` call you could simple pass a render function with a new JSX element to shown:
-
-```javascript
-showMessage({
-  message: "Hello World",
-  description: "This is our custom icon message",
-  icon: props => <Image source={require("../assets/YOUR-CUSTOM-ICON.png")} {...props} />,
-  type: "success",
-});
-```
-
 If you need to handle the press/touch event in your message, you could use the `onPress` attribute to take some action:
 
 ```javascript
@@ -185,6 +172,19 @@ showMessage({
   onPress: () => {
     /* THIS FUNC/CB WILL BE CALLED AFTER MESSAGE PRESS */
   },
+});
+```
+
+## Message with custom icon
+
+To show a custom/diferent icon in a `showMessage` call you could simple pass a render function with a new JSX element to shown:
+
+```javascript
+showMessage({
+  message: "Hello World",
+  description: "This is our custom icon message",
+  icon: props => <Image source={require("../assets/YOUR-CUSTOM-ICON.png")} {...props} />,
+  type: "success",
 });
 ```
 
