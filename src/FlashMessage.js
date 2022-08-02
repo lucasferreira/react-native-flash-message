@@ -49,7 +49,7 @@ function srid() {
  */
 function parseIcon(icon = "none") {
   if (!!icon && icon !== "none") {
-    if (typeof icon === "string") {
+    if (typeof icon === "string" || typeof icon === "function") {
       return { icon, position: "left", style: {} };
     }
 
@@ -149,13 +149,23 @@ const DefaultIcons = {
   danger: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBCAQAAAAk/gHOAAADgUlEQVR42u2Zz0tbQRDHvxq1UmqaoFU8tAgePESMf4EgeBF7qdaz4s2Df4AgTTGWtrEm5oe1IqiYQD2IFyW34sFCawMKOQbEk+QP8BC8xJLa8PLy5u3ubN67uXN7md35ZHd2ZnYXeGw6rR1DmEUKWeRRRAlllFBEHlmkMIshtLtp3I9JpHGFe6FcIY1J+J03H0QC1xLjtXKNBILOmR9GBncM81W5QwbDjZvvRAS3GuarcosIOhsBGMdlA+arcolxPfOtWHbAfFWW0coF8OLQQYCKHMLLAejCqcMAFTlFl/oMuAHwAOFV84EjlwAqcqTiE2EXASoSlgFMkN0usKNhLIFf5PcJcRag4kABLwBEmQDvATxHnowTggwSIwFeCn61jwMPrZuEiNkBDBKhuIBXEkTZelMQtxikETIW1T/ordNRWY6Vuj4+/LToZCiAAJEN9wk9GcQHos93IosGrGpJcsA1RY+pykdC/xupmaxX67AtSFYZEJ8I3U3boqbDrDgl+GcRRYjPhN5XwbhTZtW0cH0jCj5B6WwIR02b84KsKKWmeE0CkJIWujX5YkBhq1GOtipYgqTCmAOG+oxSwKG2WwL3iNt8l8uM+pTZBZ1Ke0N8W1ccL2V0ybJjv6ip55Ks0SmvkYDsGiej5o1uRXYatmurrJGKRscSsxZYwRPywMutKUpG5zK7IholEF6zRynrz0LYZhbW9GeB5wvvBL4Q0fUFzo4ISXZERG9HZB2ZAT5ElhtOaYC3DWzNhNFlWnsJkuaBmBDTRoc+TYCooLz7ojBmn6HukdYLFEC85veoBsQVPLXqe2yAhMLxRAyxZ1Ye0/CBelln+sSYWbXNtoIOMWrCdcZMXKNNjTfErIrVIYjDQS9xmtpgAthBbBOnqV4qqlnvEM4sd4abClut3jGf4odFZ4cOrD3EyTqPbunRTAzhRY44WffYRfcQmUq6mQC1EBSAMNW14IKEeAZgi1kLRP/tsxx5bdQiynIBcrjf2Ne4a9rGGfk9IEu18y7fuM2r3Dzuugiwq3b72owTlwBO0Kx6BezBsQsAx+bMKGtN7B0gky008V8k5hwEmNN9lenHuQPmz9HfyNOQBwsNvk0t8DyAbj7ENV/o4vA591Dow6K0vjTXhYtOmjfiRRAxFCTGC4ghqL7/dVoT/BjBEg6Qw83/N+sb5HCAJYzAr7P1HhvwF5GXIpRNQBinAAAAAElFTkSuQmCC",
 };
 
-export const renderFlashMessageIcon = (icon = "success", style = {}, iconProps = {}) => {
+export function renderFlashMessageIcon(icon = "success", style = {}, iconProps = {}) {
+  if (typeof icon === "function") {
+    return React.createElement(icon, { style: [styles.flashIcon, style], ...iconProps });
+  }
+
   if (!!DefaultIcons[icon]) {
-    return <Image style={[styles.flashIcon, style]} source={{ uri: DefaultIcons[icon] }} {...iconProps} />;
+    return (
+      <Image
+        style={[styles.flashIcon, { tintColor: "#fff" }, style]}
+        source={{ uri: DefaultIcons[icon] }}
+        {...iconProps}
+      />
+    );
   }
 
   return null;
-};
+}
 
 /**
  * Default MessageComponent used in FlashMessage
@@ -171,24 +181,27 @@ export const DefaultFlash = React.forwardRef(
       titleStyle,
       titleProps,
       textProps,
+      icon,
       iconProps,
       renderFlashMessageIcon,
       position = "top",
       statusBarHeight = null,
+      renderBeforeContent,
       renderCustomContent,
+      renderAfterContent,
       floating = false,
-      icon,
       hideStatusBar = false,
       ...props
     },
     ref
   ) => {
     const hasDescription = !!message.description && message.description !== "";
-    const iconView =
-      !!icon &&
-      !!icon.icon &&
-      renderFlashMessageIcon(
-        icon.icon === "auto" ? message.type : icon.icon,
+
+    let iconView = null;
+    let hasIcon = false;
+    if (!!icon && !!icon.icon) {
+      iconView = renderFlashMessageIcon(
+        typeof icon.icon === "string" && icon.icon === "auto" ? message.type : icon.icon,
         [
           icon.position === "left" && styles.flashIconLeft,
           icon.position === "right" && styles.flashIconRight,
@@ -196,7 +209,9 @@ export const DefaultFlash = React.forwardRef(
         ],
         !!iconProps ? iconProps : "props" in icon && !!icon.props ? icon.props : {}
       );
-    const hasIcon = !!iconView;
+
+      hasIcon = !!iconView;
+    }
 
     return (
       <FlashMessageWrapper
@@ -228,6 +243,7 @@ export const DefaultFlash = React.forwardRef(
           >
             {hasIcon && icon.position === "left" && iconView}
             <View style={styles.flashLabel}>
+              {!!renderBeforeContent && renderBeforeContent(message)}
               <Text
                 style={[
                   styles.flashText,
@@ -246,6 +262,7 @@ export const DefaultFlash = React.forwardRef(
                   {message.description}
                 </Text>
               )}
+              {!!renderAfterContent && renderAfterContent(message)}
             </View>
             {hasIcon && icon.position === "right" && iconView}
           </View>
@@ -326,10 +343,20 @@ export default class FlashMessage extends Component {
      */
     position: "top",
     /**
+     * The `render` prop will render JSX before the title of a flash message
+     * Expects a function that returns JSX
+     */
+    renderBeforeContent: null,
+    /**
      * The `render` prop will render JSX below the title of a flash message
      * Expects a function that returns JSX
      */
     renderCustomContent: null,
+    /**
+     * The `render` prop will render JSX after the title (or description) of a flash message
+     * Expects a function that returns JSX
+     */
+    renderAfterContent: null,
     /**
      * The `icon` prop set the graphical icon of a flash message
      * Expected options: "none" (default), "auto" (guided by `type`), "success", "info", "warning", "danger" or a custom object with icon type/name and position (left or right) attributes, e.g.: { icon: "success", position: "right" }
@@ -362,7 +389,9 @@ export default class FlashMessage extends Component {
     hideStatusBar: PropTypes.bool,
     floating: PropTypes.bool,
     position: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
+    renderBeforeContent: PropTypes.func,
     renderCustomContent: PropTypes.func,
+    renderAfterContent: PropTypes.func,
     icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     renderFlashMessageIcon: PropTypes.func,
     transitionConfig: PropTypes.func,
@@ -574,7 +603,9 @@ export default class FlashMessage extends Component {
     const { message, visibleValue } = this.state;
 
     const { MessageComponent, testID, accessible, accessibilityLabel, ...otherProps } = this.props;
+    const renderBeforeContent = this.prop(message, "renderBeforeContent");
     const renderCustomContent = this.prop(message, "renderCustomContent");
+    const renderAfterContent = this.prop(message, "renderAfterContent");
     const renderFlashMessageIcon = this.prop(message, "renderFlashMessageIcon");
     const style = this.prop(message, "style");
     const textStyle = this.prop(message, "textStyle");
@@ -601,7 +632,9 @@ export default class FlashMessage extends Component {
               message={message}
               hideStatusBar={hideStatusBar}
               renderFlashMessageIcon={renderFlashMessageIcon}
+              renderBeforeContent={renderBeforeContent}
               renderCustomContent={renderCustomContent}
+              renderAfterContent={renderAfterContent}
               statusBarHeight={statusBarHeight}
               icon={icon}
               style={style}
@@ -611,8 +644,8 @@ export default class FlashMessage extends Component {
               textProps={textProps}
               iconProps={iconProps}
               accessible={!!accessible}
-              testID={testID}
               accessibilityLabel={accessibilityLabel}
+              testID={testID}
             />
           </TouchableWithoutFeedback>
         )}
@@ -677,7 +710,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   flashIcon: {
-    tintColor: "#fff",
     marginTop: -1,
     width: 21,
     height: 21,

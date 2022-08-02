@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, StatusBar, TouchableOpacity, ScrollView, Text, View } from "react-native";
+import { StyleSheet, StatusBar, TouchableOpacity, ScrollView, Image, Text, View } from "react-native";
 
 import FlashMessage, { FlashMessageManager, showMessage, hideMessage } from "react-native-flash-message";
 
@@ -19,10 +19,22 @@ export default class MainScreen extends React.Component {
   showSimpleMessage(type = "default", props = {}) {
     const message = {
       message: "Some message title",
-      description: "Lorem ipsum dolar sit amet",
+      description: "Lorem ipsum dolar sit amet. Lorem ipsum dolar sit amet and this is it a long text to test.",
       icon: { icon: "auto", position: "left" },
       type,
       ...props,
+    };
+
+    showMessage(message);
+  }
+  showCustomIconMessage() {
+    const message = {
+      message: "Some message title",
+      description: "Lorem ipsum dolar sit amet. Lorem ipsum dolar sit amet and this is it a long text to test.",
+      backgroundColor: FlashMessage.ColorTheme.success,
+      icon: ({ style, ...props }) => (
+        <Image source={require("../assets/favicon.png")} style={[style, { width: 32, height: 32 }]} {...props} />
+      ),
     };
 
     showMessage(message);
@@ -95,6 +107,11 @@ export default class MainScreen extends React.Component {
                 onPress={() => this.showSimpleMessage("danger")}
               />
               <DemoButton
+                style={[styles.demoButton, { backgroundColor: "black" }]}
+                label="Custom Icon"
+                onPress={() => this.showCustomIconMessage()}
+              />
+              <DemoButton
                 style={[styles.demoButton, styles.demoButtonInline, { backgroundColor: "pink" }]}
                 label="Custom Color"
                 onPress={() => this.showSimpleMessage("default", { backgroundColor: "pink" })}
@@ -149,6 +166,38 @@ export default class MainScreen extends React.Component {
                     renderCustomContent: () => (
                       <View style={{ padding: 9 }}>
                         <Text>What?</Text>
+                      </View>
+                    ),
+                  })
+                }
+              />
+              <DemoButton
+                style={styles.demoButton}
+                labelStyle={{ fontSize: 13 }}
+                label="Message Before Custom Content"
+                onPress={() =>
+                  this.showSimpleMessage("info", {
+                    renderBeforeContent: () => (
+                      <View style={{ padding: 9 }}>
+                        <Text>This will be first</Text>
+                      </View>
+                    ),
+                  })
+                }
+              />
+              <DemoButton
+                style={styles.demoButton}
+                labelStyle={{ fontSize: 13 }}
+                label="Message After Custom Content"
+                onPress={() =>
+                  this.showSimpleMessage("info", {
+                    renderAfterContent: () => (
+                      <View style={{ paddingTop: 9 }}>
+                        <Text>This will be the last place to put some action buttons and etc</Text>
+                        <DemoButton
+                          style={[styles.demoButton, { marginLeft: 0, marginTop: 7, alignSelf: "flex-start" }]}
+                          label="Action?"
+                        />
                       </View>
                     ),
                   })

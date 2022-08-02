@@ -35,15 +35,18 @@ export interface MessageComponentProps {
   floating?: boolean;
   message: Message;
   hideStatusBar?: boolean;
-  icon: Icon;
+  icon: React.ReactElement | Icon;
   style: StyleProp<ViewStyle>;
   textStyle: StyleProp<TextStyle>;
   titleStyle: StyleProp<TextStyle>;
   renderFlashMessageIcon?(
-    icon: Icon,
+    icon: React.ReactElement | Icon,
     style: StyleProp<ImageStyle>,
     iconProps: Partial<ImageProps>
   ): React.ReactElement<{}> | null;
+  renderBeforeContent?(message: MessageOptions): React.ReactElement<{}> | null;
+  renderCustomContent?(message: MessageOptions): React.ReactElement<{}> | null;
+  renderAfterMessage?(message: MessageOptions): React.ReactElement<{}> | null;
 }
 
 export interface MessageOptions {
@@ -58,7 +61,7 @@ export interface MessageOptions {
   hideOnPress?: boolean;
   hideStatusBar?: boolean;
   statusBarHeight?: number;
-  icon?: Icon;
+  icon?: React.ReactElement | Icon;
   iconProps?: Partial<ImageProps>;
   message: string;
   position?: Position;
@@ -70,10 +73,13 @@ export interface MessageOptions {
   onPress?(): void;
   onLongPress?(): void;
   renderFlashMessageIcon?(
-    icon: Icon,
+    icon: React.ReactElement | Icon,
     style: StyleProp<ImageStyle>,
     iconProps: Partial<ImageProps>
   ): React.ReactElement<{}> | null;
+  renderBeforeContent?(message: MessageOptions): React.ReactElement<{}> | null;
+  renderCustomContent?(message: MessageOptions): React.ReactElement<{}> | null;
+  renderAfterMessage?(message: MessageOptions): React.ReactElement<{}> | null;
 }
 
 export interface FlashMessageProps extends Partial<MessageOptions> {
@@ -84,12 +90,6 @@ export interface FlashMessageProps extends Partial<MessageOptions> {
   style?: StyleProp<ViewStyle>;
   MessageComponent?: React.SFC<MessageComponentProps> | React.ReactElement<MessageComponentProps>;
   transitionConfig?(animValue: Animated.Value, position: Position): Transition;
-  renderFlashMessageIcon?(
-    icon: Icon,
-    style: StyleProp<ImageStyle>,
-    iconProps: Partial<ImageProps>
-  ): React.ReactElement<{}> | null;
-  renderCustomContent?(message: MessageOptions): React.ReactElement<{}> | null;
 }
 
 export interface ColorTheme {
