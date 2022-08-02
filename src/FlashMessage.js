@@ -242,7 +242,7 @@ export const DefaultFlash = React.forwardRef(
             {...props}
           >
             {hasIcon && icon.position === "left" && iconView}
-            <View style={styles.flashLabel}>
+            <View style={[{ flexDirection: "column" }, position !== "center" && { flex: 1 }]}>
               {!!renderBeforeContent && renderBeforeContent(message)}
               <Text
                 style={[
@@ -695,9 +695,6 @@ const styles = StyleSheet.create({
   },
   defaultFlashWithIcon: {
     flexDirection: "row",
-  },
-  flashLabel: {
-    flexDirection: "column",
   },
   flashText: {
     fontSize: 14,
