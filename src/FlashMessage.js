@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, TouchableWithoutFeedback, Platform, StatusBar, Animated, Image, Text, View } from "react-native";
-import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
+import { isIphoneX, getStatusBarHeight } from "react-native-iphone-screen-helper";
 import PropTypes from "prop-types";
 
 import FlashMessageManager from "./FlashMessageManager";

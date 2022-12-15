@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Dimensions, Platform, StatusBar, StyleSheet } from "react-native";
-import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
+import { isIphoneX, getStatusBarHeight } from "react-native-iphone-screen-helper";
 import PropTypes from "prop-types";
 
 /**
