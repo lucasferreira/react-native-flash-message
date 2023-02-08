@@ -46,7 +46,7 @@ export interface MessageComponentProps {
   ): React.ReactElement<{}> | null;
   renderBeforeContent?(message: MessageOptions): React.ReactElement<{}> | null;
   renderCustomContent?(message: MessageOptions): React.ReactElement<{}> | null;
-  renderAfterMessage?(message: MessageOptions): React.ReactElement<{}> | null;
+  renderAfterContent?(message: MessageOptions): React.ReactElement<{}> | null;
 }
 
 export interface MessageOptions {
@@ -79,7 +79,7 @@ export interface MessageOptions {
   ): React.ReactElement<{}> | null;
   renderBeforeContent?(message: MessageOptions): React.ReactElement<{}> | null;
   renderCustomContent?(message: MessageOptions): React.ReactElement<{}> | null;
-  renderAfterMessage?(message: MessageOptions): React.ReactElement<{}> | null;
+  renderAfterContent?(message: MessageOptions): React.ReactElement<{}> | null;
 }
 
 export interface FlashMessageProps extends Partial<MessageOptions> {
