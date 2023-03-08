@@ -61,7 +61,7 @@ export interface MessageOptions {
   hideOnPress?: boolean;
   hideStatusBar?: boolean;
   statusBarHeight?: number;
-  icon?: React.ReactElement | Icon;
+  icon?: React.ReactElement | React.FC | Icon;
   iconProps?: Partial<ImageProps>;
   message: string;
   position?: Position;
