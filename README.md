@@ -219,7 +219,7 @@ More details and use cases coming soon.
 
 If this project helped you to reduce your developing time, you can give me a cup of coffee :)
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?business=ZMAJTXD5HYWCQ&item_name=open-source+dev+flash+message&currency_code=USD)
+Please, consider [becoming a sponsor](https://github.com/sponsors/lucasferreira).
 
 ## License
 
