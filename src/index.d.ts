@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Animated, ImageProps, ImageStyle, StyleProp, TextStyle, TranslateYTransform, ViewStyle } from "react-native";
+import { Animated, ImageProps, ImageStyle, StyleProp, TextStyle, TranslateYTransform, ViewStyle, TextProps } from "react-native";
 
 export type Position = "top" | "bottom" | "center" | { top?: number; left?: number; bottom?: number; right?: number };
 export type MessageType = "none" | "default" | "info" | "success" | "danger" | "warning";
@@ -68,6 +68,8 @@ export interface MessageOptions {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   titleStyle?: StyleProp<TextStyle>;
+  textProps?: TextProps;
+  titleProps?: TextProps;
   type?: MessageType;
   onHide?(): void;
   onPress?(): void;
