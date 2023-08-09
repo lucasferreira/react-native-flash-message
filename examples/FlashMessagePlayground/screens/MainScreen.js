@@ -1,20 +1,25 @@
 import React from "react";
-import { StyleSheet, StatusBar, TouchableOpacity, ScrollView, Text, View } from "react-native";
+import { StyleSheet, StatusBar, TouchableOpacity, ScrollView, Image, Text, View } from "react-native";
 
-import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
+import FlashMessage, { FlashMessageManager, showMessage, hideMessage } from "react-native-flash-message";
 
 import DemoButton from "../components/DemoButton";
+import CustomModal from "../components/CustomModal";
 
 const Sepator = ({ style }) => <View style={[styles.separator, style]} />;
 
 export default class MainScreen extends React.Component {
-  static navigationOptions = {
-    title: "Flash Message Demo",
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      customModalVisible: false,
+    };
+  }
   showSimpleMessage(type = "default", props = {}) {
     const message = {
       message: "Some message title",
-      description: "Lorem ipsum dolar sit amet",
+      description: "Lorem ipsum dolar sit amet. Lorem ipsum dolar sit amet and this is it a long text to test.",
       icon: { icon: "auto", position: "left" },
       type,
       ...props,
@@ -22,9 +27,21 @@ export default class MainScreen extends React.Component {
 
     showMessage(message);
   }
+  showCustomIconMessage() {
+    const message = {
+      message: "Some message title",
+      description: "Lorem ipsum dolar sit amet. Lorem ipsum dolar sit amet and this is it a long text to test.",
+      backgroundColor: FlashMessage.ColorTheme.success,
+      icon: ({ style, ...props }) => (
+        <Image source={require("../assets/favicon.png")} style={[style, { width: 32, height: 32 }]} {...props} />
+      ),
+    };
+
+    showMessage(message);
+  }
   messageWithPosition(position = "top", hasDescription = true, extra = {}) {
     let message = {
-      message: "Some message title",
+      message: "Some short message title",
       type: "info",
       position,
       ...extra,
@@ -90,6 +107,11 @@ export default class MainScreen extends React.Component {
                 onPress={() => this.showSimpleMessage("danger")}
               />
               <DemoButton
+                style={[styles.demoButton, { backgroundColor: "black" }]}
+                label="Custom Icon"
+                onPress={() => this.showCustomIconMessage()}
+              />
+              <DemoButton
                 style={[styles.demoButton, styles.demoButtonInline, { backgroundColor: "pink" }]}
                 label="Custom Color"
                 onPress={() => this.showSimpleMessage("default", { backgroundColor: "pink" })}
@@ -138,6 +160,65 @@ export default class MainScreen extends React.Component {
               <DemoButton
                 style={styles.demoButton}
                 labelStyle={{ fontSize: 14 }}
+                label="Message Custom Content"
+                onPress={() =>
+                  this.showSimpleMessage("info", {
+                    renderCustomContent: () => (
+                      <View style={{ padding: 9 }}>
+                        <Text>What?</Text>
+                      </View>
+                    ),
+                  })
+                }
+              />
+              <DemoButton
+                style={styles.demoButton}
+                labelStyle={{ fontSize: 13 }}
+                label="Message Before Custom Content"
+                onPress={() =>
+                  this.showSimpleMessage("info", {
+                    renderBeforeContent: () => (
+                      <View style={{ padding: 9 }}>
+                        <Text>This will be first</Text>
+                      </View>
+                    ),
+                  })
+                }
+              />
+              <DemoButton
+                style={styles.demoButton}
+                labelStyle={{ fontSize: 13 }}
+                label="Message After Custom Content"
+                onPress={() =>
+                  this.showSimpleMessage("info", {
+                    renderAfterContent: () => (
+                      <View style={{ paddingTop: 9 }}>
+                        <Text>This will be the last place to put some action buttons and etc</Text>
+                        <DemoButton
+                          style={[styles.demoButton, { marginLeft: 0, marginTop: 7, alignSelf: "flex-start" }]}
+                          label="Action?"
+                        />
+                      </View>
+                    ),
+                  })
+                }
+              />
+              <DemoButton
+                style={styles.demoButton}
+                labelStyle={{ fontSize: 14 }}
+                label="Message Long Message"
+                onPress={() =>
+                  showMessage({
+                    message: "Messsage Title",
+                    description: "really long message really long message really long message wow so long Message",
+                    type: "info",
+                    icon: "info",
+                  })
+                }
+              />
+              <DemoButton
+                style={styles.demoButton}
+                labelStyle={{ fontSize: 14 }}
                 label="Message without Anim"
                 onPress={() => this.showSimpleMessage("info", { animated: false })}
               />
@@ -168,8 +249,13 @@ export default class MainScreen extends React.Component {
               />
               <DemoButton
                 style={[styles.demoButton, { backgroundColor: "black" }]}
-                label="Message from Modal"
+                label="Message from Navigation Modal"
                 onPress={() => navigation.navigate("DemoModal")}
+              />
+              <DemoButton
+                style={[styles.demoButton, { backgroundColor: "black" }]}
+                label="Message from Native Modal"
+                onPress={() => this.setState({ customModalVisible: true })}
               />
               <DemoButton
                 style={[styles.demoButton, { backgroundColor: "black" }]}
@@ -177,8 +263,24 @@ export default class MainScreen extends React.Component {
                 onPress={() => navigation.navigate("LocalInstance")}
               />
             </View>
+            <Sepator />
+            <View style={styles.group}>
+              <DemoButton
+                style={[styles.demoButton, { backgroundColor: FlashMessageManager.isEnabled ? "#C00" : "green" }]}
+                labelStyle={{ fontSize: 14 }}
+                label={FlashMessageManager.isEnabled ? "Disable all messages" : "Re-enable messages"}
+                onPress={() => {
+                  FlashMessageManager.setDisabled(FlashMessageManager.isEnabled ? true : false);
+                  this.forceUpdate();
+                }}
+              />
+            </View>
           </View>
         </ScrollView>
+        <CustomModal
+          modalVisible={this.state.customModalVisible}
+          setModalVisible={customModalVisible => this.setState({ customModalVisible })}
+        />
       </View>
     );
   }

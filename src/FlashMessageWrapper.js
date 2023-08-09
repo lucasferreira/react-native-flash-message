@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Dimensions, Platform, StyleSheet } from "react-native";
-import { isIphoneX, getStatusBarHeight } from "react-native-iphone-x-helper";
+import { Dimensions, Platform, StatusBar, StyleSheet } from "react-native";
+import { isIphoneX, getStatusBarHeight } from "react-native-iphone-screen-helper";
 import PropTypes from "prop-types";
 
 /**
@@ -20,25 +20,29 @@ const isIPhoneX = isIphoneX();
 const isIPad = (() => {
   if (Platform.OS !== "ios" || isIPhoneX) return false;
 
-  // if portrait and width is smaller than iPad width
+  // if portrait and width are smaller than the iPad's width...
   if (D_HEIGHT > D_WIDTH && D_WIDTH < PAD_WIDTH) {
-    return false;
+    return false; // It is probably not an iPad
   }
 
-  // if landscape and height is smaller that iPad height
+  // if landscape and height are smaller that the iPad's height...
   if (D_WIDTH > D_HEIGHT && D_HEIGHT < PAD_WIDTH) {
-    return false;
+    return false; // It is probably not an iPad
   }
 
+  // If all verifications go alright
+  // then it is probably an iPad
   return true;
 })();
 
 const isOrientationLandscape = ({ width, height }) => width > height;
 
-let _customStatusBarHeight = null;
-const statusBarHeight = (isLandscape = false) => {
-  if (_customStatusBarHeight !== null) {
-    return _customStatusBarHeight;
+/**
+ * Helper function to get the current status bar height to plus in paddingTop message
+ */
+export function getFlashMessageStatusBarHeight(isLandscape = false, _customStatusBarHeight = null) {
+  if (_customStatusBarHeight !== null && _customStatusBarHeight !== false) {
+    return typeof _customStatusBarHeight === "function" ? _customStatusBarHeight(isLandscape) : +_customStatusBarHeight;
   }
 
   /**
@@ -48,11 +52,11 @@ const statusBarHeight = (isLandscape = false) => {
    * we do.
    */
   if (isAndroid) {
-    if (global.Expo) {
-      return global.Expo.Constants.statusBarHeight + 6;
-    } else {
-      return 6;
+    if (!!global && !!global.Expo) {
+      return +StatusBar.currentHeight + 6;
     }
+
+    return 6;
   }
 
   if (isIPhoneX) {
@@ -64,10 +68,10 @@ const statusBarHeight = (isLandscape = false) => {
   }
 
   return isLandscape ? 0 : 20;
-};
+}
 
 const doubleFromPercentString = percent => {
-  if (!percent.includes("%")) {
+  if (!percent || !percent.includes("%")) {
     return 0;
   }
 
@@ -167,13 +171,13 @@ export function styleWithInsetMargin(style, wrapperInset, hideStatusBar = false)
 }
 
 /**
- * Utility component wrapper to handle orientation changes and extra padding controle for iOS (specially iPads and iPhone X)
+ * Utility component wrapper to handle orientation changes and extra padding control for iOS (specially iPads and iPhone X)
  */
 export default class FlashMessageWrapper extends Component {
   static defaultProps = {
     /**
      * Default FlashMessage position is "top"
-     * Other options like "bottom" and "center" uses other extra padding configurations
+     * Other options like "bottom" and "center" use other extra padding configurations
      */
     position: "top",
   };
@@ -181,32 +185,33 @@ export default class FlashMessageWrapper extends Component {
     position: PropTypes.string,
     children: PropTypes.func.isRequired,
   };
-  static setStatusBarHeight = height => {
-    _customStatusBarHeight = height;
-  };
   constructor() {
     super();
 
     this.handleOrientationChange = this.handleOrientationChange.bind(this);
+    this.dimensionsSubscription = null;
 
-    const isLandscape = isOrientationLandscape(Dimensions.get("window"));
-    this.state = { isLandscape };
+    this.state = {
+      isLandscape: isOrientationLandscape(Dimensions.get("window")),
+    };
   }
   componentDidMount() {
-    Dimensions.addEventListener("change", this.handleOrientationChange);
+    this.dimensionsSubscription = Dimensions.addEventListener("change", this.handleOrientationChange);
   }
   componentWillUnmount() {
-    Dimensions.removeEventListener("change", this.handleOrientationChange);
+    if (!!this.dimensionsSubscription) {
+      this.dimensionsSubscription.remove();
+    }
   }
   handleOrientationChange({ window }) {
     const isLandscape = isOrientationLandscape(window);
     this.setState({ isLandscape });
   }
   render() {
-    const { position, children } = this.props;
+    const { position, statusBarHeight = null, children } = this.props;
     const { isLandscape } = this.state;
 
-    const _statusBarHeight = statusBarHeight(isLandscape);
+    const _statusBarHeight = getFlashMessageStatusBarHeight(isLandscape, statusBarHeight);
 
     /**
      * This wrapper will return data about extra inset padding, statusBarHeight and some device detection like iPhoneX and iPad

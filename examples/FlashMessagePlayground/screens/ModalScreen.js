@@ -6,9 +6,6 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import DemoButton from "../components/DemoButton";
 
 export default class ModalScreen extends React.Component {
-  static navigationOptions = {
-    title: "Local Instance",
-  };
   render() {
     const { navigation } = this.props;
 

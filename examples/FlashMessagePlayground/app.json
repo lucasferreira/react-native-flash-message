@@ -2,19 +2,34 @@
   "expo": {
     "name": "Flash Message Playground",
     "description": "Use this playground app to try out react-native-flash-message versatile uses",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "slug": "FlashMessagePlayground",
     "privacy": "public",
-    "primaryColor": "#393939",
-    "icon": "./assets/icons/icon.png",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/icons/splash.png"
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
-    "sdkVersion": "35.0.0",
-    "entryPoint": "./node_modules/expo/AppEntry.js",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "githubUrl": "https://github.com/lucasferreira/react-native-flash-message/tree/master/examples/FlashMessagePlayground",
     "ios": {
       "supportsTablet": true
     },
-    "githubUrl": "https://github.com/lucasferreira/react-native-flash-message/tree/master/examples/FlashMessagePlayground"
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
   }
 }

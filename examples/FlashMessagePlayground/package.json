@@ -1,29 +1,34 @@
 {
-  "name": "FlashMessagePlayground",
-  "version": "0.2.1",
-  "private": true,
-  "main": "./node_modules/expo/AppEntry.js",
+  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "eject": "expo eject",
-    "android": "expo start --android --tunnel",
-    "ios": "expo start --ios --tunnel",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
     "upd": "yarn upgrade-interactive --latest",
-    "test": "jest"
-  },
-  "jest": {
-    "preset": "jest-expo"
+    "eject": "expo eject"
   },
   "dependencies": {
-    "expo": "^35.0.0",
-    "react": "16.8.3",
-    "react-native": "0.59.8",
-    "react-native-flash-message": "link:../..",
-    "react-native-iphone-x-helper": "^1.2.1",
-    "react-navigation": "^1.5.0"
+    "@react-native-masked-view/masked-view": "0.2.6",
+    "@react-navigation/native": "^6.0.2",
+    "@react-navigation/native-stack": "^6.1.0",
+    "expo": "^44.0.0",
+    "expo-updates": "~0.11.7",
+    "prop-types": "^15.8.1",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-native": "0.64.3",
+    "react-native-iphone-screen-helper": "^2.0.2",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-screens": "~3.10.1",
+    "react-native-web": "0.17.1"
   },
   "devDependencies": {
-    "jest-expo": "32.0.0",
-    "react-test-renderer": "16.5.0"
-  }
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.15.4",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-preset-expo": "9.0.2",
+    "metro-config": "^0.72.0"
+  },
+  "private": true
 }

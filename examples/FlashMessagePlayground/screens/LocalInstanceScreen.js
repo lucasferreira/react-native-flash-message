@@ -6,9 +6,6 @@ import FlashMessage, { showMessage, hideMessage } from "react-native-flash-messa
 import DemoButton from "../components/DemoButton";
 
 export default class LocalInstanceScreen extends React.Component {
-  static navigationOptions = {
-    title: "Local Instance",
-  };
   render() {
     const { navigation } = this.props;
 
