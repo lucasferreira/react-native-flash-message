@@ -581,7 +581,7 @@ export default class FlashMessage extends Component {
    * this.refs.YOUR_REF.showMessage({ message: "Contact sent", description "Your message was sent with success", type: "success" })
    * ```
    */
-  showMessage(message, description = null, type = "default", hideOnPress = true) {
+  showMessage(message, description = null, type = "default") {
     if (!!message) {
       let _message = {};
       if (typeof message === "string") {
