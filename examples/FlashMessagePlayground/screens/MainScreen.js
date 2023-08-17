@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, StatusBar, TouchableOpacity, ScrollView, Image, Text, View } from "react-native";
 
-import FlashMessage, { FlashMessageManager, showMessage, hideMessage } from "react-native-flash-message";
+import FlashMessage, { FlashMessageManager, showMessage, hideMessage } from "../../../src";
 
 import DemoButton from "../components/DemoButton";
 import CustomModal from "../components/CustomModal";
@@ -18,6 +18,7 @@ export default class MainScreen extends React.Component {
   }
   showSimpleMessage(type = "default", props = {}) {
     const message = {
+      lock:true,
       message: "Some message title",
       description: "Lorem ipsum dolar sit amet. Lorem ipsum dolar sit amet and this is it a long text to test.",
       icon: { icon: "auto", position: "left" },
@@ -230,8 +231,22 @@ export default class MainScreen extends React.Component {
                     message: "This message will desapear only if you press",
                     type: "warning",
                     autoHide: false,
+                    
                   })
                 }
+              />
+                            <DemoButton
+                style={styles.demoButton}
+                labelStyle={{ fontSize: 14 }}
+                label="Message without Anim"
+                onPress={() => this.showSimpleMessage("info", { animated: false })}
+              />
+              <DemoButton
+                style={styles.demoButton}
+                label="removeMessage"
+                onPress={() =>{
+                  hideMessage();
+                }}
               />
             </View>
             <Sepator />
