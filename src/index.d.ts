@@ -82,6 +82,7 @@ export interface MessageOptions {
   renderBeforeContent?(message: MessageOptions): React.ReactElement<{}> | null;
   renderCustomContent?(message: MessageOptions): React.ReactElement<{}> | null;
   renderAfterContent?(message: MessageOptions): React.ReactElement<{}> | null;
+  accessibilityLabel?: string;
 }
 
 export interface FlashMessageProps extends Partial<MessageOptions> {
