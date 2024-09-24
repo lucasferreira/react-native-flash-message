@@ -1,8 +1,17 @@
-import React, { Component } from "react";
-import { StyleSheet, TouchableWithoutFeedback, Platform, StatusBar, Animated, Image, Text, View } from "react-native";
-import { isIphoneX, getStatusBarHeight } from "react-native-iphone-screen-helper";
 import PropTypes from "prop-types";
-
+import React, { Component } from "react";
+import {
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Platform,
+  StatusBar,
+  Animated,
+  PanResponder,
+  Image,
+  Text,
+  View,
+} from "react-native";
+import { getStatusBarHeight } from "react-native-iphone-screen-helper";
 import FlashMessageManager from "./FlashMessageManager";
 import FlashMessageWrapper, { styleWithInset } from "./FlashMessageWrapper";
 
@@ -411,7 +420,25 @@ export default class FlashMessage extends Component {
   };
   constructor(props) {
     super(props);
-
+    this.pan = new Animated.ValueXY();
+    this.panResponder = PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([null, { dy: this.pan.y }], {
+        useNativeDriver: false,
+      }),
+      onPanResponderRelease: () => {
+        this.toggleVisibility(false);
+      },
+    });
+    this.panResponder = PanResponder.create({
+      onMoveShouldSetPanResponder: (event, gestureState) => gestureState.dy < 0,
+      onPanResponderMove: Animated.event([null, { dy: this.pan.y }], {
+        useNativeDriver: false,
+      }),
+      onPanResponderRelease: () => {
+        this.toggleVisibility(false);
+      },
+    });
     this.prop = this.prop.bind(this);
     this.pressMessage = this.pressMessage.bind(this);
     this.longPressMessage = this.longPressMessage.bind(this);
@@ -601,6 +628,7 @@ export default class FlashMessage extends Component {
   }
   render() {
     const { message, visibleValue } = this.state;
+    const { pan } = this;
 
     const { MessageComponent, testID, accessible, accessibilityLabel, ...otherProps } = this.props;
     const renderBeforeContent = this.prop(message, "renderBeforeContent");
@@ -623,9 +651,21 @@ export default class FlashMessage extends Component {
     const animStyle = animated ? transitionConfig(visibleValue, position) : {};
 
     return (
-      <Animated.View pointerEvents="box-none" style={[positionStyle(styles.root, position), animStyle]}>
-        {!!message && (
-          <TouchableWithoutFeedback onPress={this.pressMessage} onLongPress={this.longPressMessage} accessible={false}>
+      <Animated.View
+        pointerEvents="box-none"
+        style={[
+          position === "top" && { transform: [{ translateY: pan.y }] },
+          positionStyle(styles.root, position),
+          animStyle,
+        ]}
+        {...this.panResponder.panHandlers}
+      >
+        {Boolean(message) && (
+          <TouchableWithoutFeedback
+            onPress={this.pressMessage}
+            onLongPress={this.longPressMessage}
+            accessible={false}
+          >
             <MessageComponent
               position={position}
               floating={floating}
