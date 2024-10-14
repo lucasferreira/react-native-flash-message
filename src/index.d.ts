@@ -91,7 +91,7 @@ export interface FlashMessageProps extends Partial<MessageOptions> {
   testID?: string;
   canRegisterAsDefault?: boolean;
   style?: StyleProp<ViewStyle>;
-  MessageComponent?: React.SFC<MessageComponentProps> | React.ReactElement<MessageComponentProps>;
+  MessageComponent?: React.FC<MessageComponentProps> | React.ReactElement<MessageComponentProps>;
   transitionConfig?(animValue: Animated.Value, position: Position): Transition;
 }
 
