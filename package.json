@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "prop-types": "^15.8.1",
-    "react-native-iphone-screen-helper": "^2.0.2"
+    "react-native-iphone-screen-helper": "^2.1.2"
   },
   "devDependencies": {
     "prettier": "^2.5.1",

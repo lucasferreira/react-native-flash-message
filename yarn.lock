@@ -2595,6 +2595,8 @@ jsonfile@^2.1.0:
   version "2.4.0"
   resolved "https://registry.npmjs.org/jsonfile/-/jsonfile-2.4.0.tgz#3736a2b428b87bbda0cc83b53fa3d633a35c2ae8"
   integrity sha1-NzaitCi4e72gzIO1P6PWM6NcKug=
+  optionalDependencies:
+    graceful-fs "^4.1.6"
 
 jsonfile@^4.0.0:
   version "4.0.0"
@@ -3507,10 +3509,10 @@ react-native-codegen@^0.0.6:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
-react-native-iphone-screen-helper@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.npmjs.org/react-native-iphone-screen-helper/-/react-native-iphone-screen-helper-2.0.2.tgz#cc2c3891d66f21dc114c74e4a7917b327fe39464"
-  integrity sha512-Xn33CjStC7jJnM2vB8FrUTky/3C6BvzzHdRsiaEnVqurXMbrH5FPL6sXdb501q5uK9ocK92Dcm1dv6eNDA3P3Q==
+react-native-iphone-screen-helper@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-iphone-screen-helper/-/react-native-iphone-screen-helper-2.1.2.tgz#6b376f71616080294c1b39c2fe064120ffdc79bf"
+  integrity sha512-xczoNSb582bPW9na9f5ASlJ19vn/JBJ/jPzZ8f+u06F3tCa23dOIml7d4tHmbHdmVaWqf6tgRc95+tyavWg4Fw==
 
 react-native@0.64.3:
   version "0.64.3"
