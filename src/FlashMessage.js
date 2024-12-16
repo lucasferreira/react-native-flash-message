@@ -321,6 +321,10 @@ export default class FlashMessage extends Component {
      */
     autoHide: true,
     /**
+     * Enables the user to lock the message in place when `lock` is true
+    */
+    lock:false,
+    /**
      * How many milliseconds the flash message will be shown if the `autoHide` it's true
      */
     duration: 1850,
@@ -386,6 +390,7 @@ export default class FlashMessage extends Component {
     animationDuration: PropTypes.number,
     duration: PropTypes.number,
     autoHide: PropTypes.bool,
+    lock:PropTypes.bool,
     hideStatusBar: PropTypes.bool,
     floating: PropTypes.bool,
     position: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
@@ -456,9 +461,10 @@ export default class FlashMessage extends Component {
     if (!this.state.isHidding) {
       const { message } = this.state;
       const hideOnPress = this.prop(message, "hideOnPress");
+      const lock = this.prop(message, "lock");
       const onPress = this.prop(message, "onPress");
 
-      if (hideOnPress) {
+      if (hideOnPress && !lock) {
         this.hideMessage();
       }
 
@@ -495,6 +501,8 @@ export default class FlashMessage extends Component {
     const animationDuration = this.prop(message, "animationDuration");
     const duration = this.prop(message, "duration");
     const autoHide = this.prop(message, "autoHide");
+    const lock = this.prop(message, "lock");
+
     const hideStatusBar = this.prop(message, "hideStatusBar");
 
     if (this._hideTimeout) {
@@ -504,7 +512,8 @@ export default class FlashMessage extends Component {
     if (visible) {
       const onShow = this.prop(message, "onShow") || noop;
       const finish = () => {
-        if (!!autoHide && duration > 0) {
+
+        if (!!autoHide && duration > 0 && !lock) {
           this._hideTimeout = setTimeout(() => this.toggleVisibility(false, animated), duration);
         }
 
